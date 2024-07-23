@@ -1,0 +1,25 @@
+/* static/css/style.css */
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+}
+
+.input-group {
+    margin-top: 10px;
+}
+
+#result {
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+}
