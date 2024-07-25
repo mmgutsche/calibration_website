@@ -7,7 +7,7 @@ from flask_limiter.util import get_remote_address
 app = Flask(__name__)
 
 # Configure rate limiter
-limiter = Limiter(app, key_func=get_remote_address)
+limiter = Limiter(get_remote_address, app=app)
 
 # Load questions from a JSON file
 with open("questions.json", "r") as f:
