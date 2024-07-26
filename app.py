@@ -43,11 +43,14 @@ def submit():
         return jsonify({"error": "Invalid selected questions or answers"}), 400
 
     # Validate answer format
-    for i, q in enumerate(selected_questions):
+    for i, _ in enumerate(selected_questions):
         lower = answers.get(f"lower_{i}")
         upper = answers.get(f"upper_{i}")
 
-        if not isinstance(lower, (int, float)) or not isinstance(upper, (int, float)):
+        try:
+            lower = float(lower)
+            upper = float(upper)
+        except ValueError:
             return jsonify({"error": "Invalid answer format"}), 400
 
     # Calculate score and detailed results
