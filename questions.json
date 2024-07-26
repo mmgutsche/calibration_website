@@ -1,582 +1,202 @@
 [
     {
-        "question": "What is the approximate age of the universe in billion years?",
-        "answer": 13.8
+        "question": "What is the population of Canada in 2023 (in millions)?",
+        "answer": 39.4
     },
     {
-        "question": "How many known moons does Saturn have?",
-        "answer": 83
+        "question": "What is the distance in kilometers between New York City and Los Angeles?",
+        "answer": 3940
     },
     {
-        "question": "What is the boiling point of liquid nitrogen in degrees Celsius?",
-        "answer": -196
+        "question": "In what year was Leonardo da Vinci born?",
+        "answer": 1452
     },
     {
-        "question": "What is the most recent estimate for the number of stars in the Milky Way galaxy?",
-        "answer": 250000000000
+        "question": "How many smartphones were sold worldwide in 2022 (in millions)?",
+        "answer": 1450
     },
     {
-        "question": "What is the average distance from the Earth to the Moon in kilometers?",
-        "answer": 384400
+        "question": "What is the average depth of the Arctic Ocean in meters?",
+        "answer": 1205
     },
     {
-        "question": "What is the total length of the human circulatory system in kilometers?",
-        "answer": 100000
+        "question": "What was the GDP of Brazil in 2022 (in billions of USD)?",
+        "answer": 1676
     },
     {
-        "question": "What is the current population of Tokyo, including its metropolitan area?",
-        "answer": 37400000
+        "question": "How many Harry Potter books have been sold worldwide as of 2023 (in millions)?",
+        "answer": 600
     },
     {
-        "question": "What is the speed of sound in air at sea level in meters per second?",
-        "answer": 343
+        "question": "What is the total cost of the International Space Station project (in billions of USD)?",
+        "answer": 150
     },
     {
-        "question": "What is the tallest tree species in the world in meters?",
-        "answer": 115
+        "question": "What is the world record time for the men's 100-meter sprint as of 2023 (in seconds)?",
+        "answer": 9.58
     },
     {
-        "question": "What is the total length of all the DNA in a single human cell in meters?",
-        "answer": 2
-    },
-    {
-        "question": "What is the estimated number of neurons in the human brain?",
-        "answer": 86000000000
-    },
-    {
-        "question": "What is the largest known star by radius in solar radii?",
-        "answer": 1708
-    },
-    {
-        "question": "What is the number of distinct proteins estimated to be in the human body?",
-        "answer": 25000
-    },
-    {
-        "question": "How many different elements are naturally occurring on Earth?",
-        "answer": 94
-    },
-    {
-        "question": "What is the heaviest naturally occurring element by atomic weight?",
-        "answer": 238
-    },
-    {
-        "question": "What is the average depth of the Earth's oceans in meters?",
-        "answer": 3688
-    },
-    {
-        "question": "What is the estimated number of galaxies in the observable universe?",
-        "answer": 2000000000000
-    },
-    {
-        "question": "How many protons does the element gold (Au) have?",
-        "answer": 79
-    },
-    {
-        "question": "What is the approximate surface area of the human lungs in square meters?",
-        "answer": 70
-    },
-    {
-        "question": "What is the most common isotope of uranium used in nuclear reactors?",
-        "answer": 235
-    },
-    {
-        "question": "What is the tallest mountain in the solar system in kilometers?",
-        "answer": 22
-    },
-    {
-        "question": "What is the percentage of water in the human body by weight?",
-        "answer": 60
-    },
-    {
-        "question": "What is the number of bones in the adult human skull?",
-        "answer": 22
-    },
-    {
-        "question": "What is the main gas found in the Earth's atmosphere by percentage?",
-        "answer": 78
-    },
-    {
-        "question": "How many chromosomes do humans have?",
-        "answer": 46
-    },
-    {
-        "question": "What is the approximate number of bacteria in the human gut?",
-        "answer": 100000000000000
-    },
-    {
-        "question": "What is the closest star to the Earth after the Sun?",
-        "answer": 4.24
-    },
-    {
-        "question": "What is the most abundant element in the Earth's crust by percentage?",
-        "answer": 46.6
-    },
-    {
-        "question": "What is the number of protons in the element hydrogen?",
-        "answer": 1
-    },
-    {
-        "question": "What is the typical lifespan of a red blood cell in days?",
-        "answer": 120
-    },
-    {
-        "question": "What is the number of natural satellites orbiting Jupiter?",
-        "answer": 79
-    },
-    {
-        "question": "What is the percentage of nitrogen in the Earth's atmosphere?",
-        "answer": 78
-    },
-    {
-        "question": "How many pairs of ribs are in the human body?",
-        "answer": 12
-    },
-    {
-        "question": "What is the average temperature of the human body in degrees Celsius?",
-        "answer": 37
-    },
-    {
-        "question": "How many vertebrae are in the human spine?",
-        "answer": 33
-    },
-    {
-        "question": "What is the number of naturally occurring isotopes of carbon?",
-        "answer": 3
-    },
-    {
-        "question": "What is the average lifespan of a human being in years?",
-        "answer": 72.6
-    },
-    {
-        "question": "How many bones are in the human hand?",
-        "answer": 27
-    },
-    {
-        "question": "What is the approximate number of cells in the human body?",
-        "answer": 37000000000000
-    },
-    {
-        "question": "What is the number of electrons in a neutral atom of helium?",
-        "answer": 2
-    },
-    {
-        "question": "What is the average height of a human in centimeters?",
-        "answer": 170
-    },
-    {
-        "question": "What is the approximate number of taste buds on the human tongue?",
-        "answer": 10000
-    },
-    {
-        "question": "What is the distance from the Earth to the Sun in kilometers?",
-        "answer": 149600000
-    },
-    {
-        "question": "What is the speed of light in a vacuum in kilometers per second?",
-        "answer": 299792
-    },
-    {
-        "question": "What is the average gestation period for a human in days?",
-        "answer": 280
-    },
-    {
-        "question": "How many distinct bones are in the adult human body?",
-        "answer": 206
-    },
-    {
-        "question": "What is the atomic number of carbon?",
-        "answer": 6
-    },
-    {
-        "question": "How many elements are in the Periodic Table?",
-        "answer": 118
-    },
-    {
-        "question": "What is the approximate age of the Earth in billion years?",
-        "answer": 4.54
-    },
-    {
-        "question": "What is the number of bones in the human foot?",
-        "answer": 26
-    },
-    {
-        "question": "What is the estimated number of genes in the human genome?",
-        "answer": 20000
-    },
-    {
-        "question": "What is the height of the tallest building in the world, the Burj Khalifa, in meters?",
-        "answer": 828
-    },
-    {
-        "question": "What is the diameter of the Earth at the equator in kilometers?",
-        "answer": 12742
-    },
-    {
-        "question": "What is the total number of confirmed exoplanets as of 2021?",
-        "answer": 4369
-    },
-    {
-        "question": "How many Nobel Prizes are awarded each year?",
-        "answer": 6
-    },
-    {
-        "question": "What is the length of the Great Wall of China in kilometers?",
-        "answer": 21196
-    },
-    {
-        "question": "What is the surface area of the Moon in square kilometers?",
-        "answer": 37932000
-    },
-    {
-        "question": "What is the number of planets in our solar system?",
-        "answer": 8
-    },
-    {
-        "question": "How many Earth days does it take for Venus to complete one orbit around the Sun?",
-        "answer": 225
-    },
-    {
-        "question": "What is the average salinity of seawater in parts per thousand?",
-        "answer": 35
-    },
-    {
-        "question": "What is the average number of heartbeats per minute in a resting adult human?",
-        "answer": 70
-    },
-    {
-        "question": "What is the total number of amino acids that are used to build proteins in the human body?",
-        "answer": 20
-    },
-    {
-        "question": "What is the average surface temperature of the Sun in degrees Celsius?",
-        "answer": 5500
-    },
-    {
-        "question": "What is the number of electrons in a neutral atom of gold?",
-        "answer": 79
-    },
-    {
-        "question": "What is the length of the Amazon River in kilometers?",
-        "answer": 6400
-    },
-    {
-        "question": "What is the volume of the Earth in cubic kilometers?",
-        "answer": 1083206916846
-    },
-    {
-        "question": "How many years does it take for light from the nearest star, Proxima Centauri, to reach Earth?",
-        "answer": 4.24
-    },
-    {
-        "question": "What is the approximate number of alveoli in the human lungs?",
-        "answer": 480000000
-    },
-    {
-        "question": "What is the number of bones in the human ear?",
-        "answer": 6
-    },
-    {
-        "question": "How many liters of blood does the average adult human have?",
-        "answer": 5
-    },
-    {
-        "question": "What is the estimated number of cells in the human brain?",
-        "answer": 86000000000
+        "question": "What would be the auction price for Vincent van Gogh's 'Starry Night' if sold in 2023 (in millions of USD)?",
+        "answer": 200
     },
     {
         "question": "What is the height of Mount Everest in meters?",
         "answer": 8848
     },
     {
-        "question": "What is the average distance from the Earth to Mars in kilometers?",
-        "answer": 225000000
+        "question": "What is the total length of the Amazon River in kilometers?",
+        "answer": 7050
     },
     {
-        "question": "How many pairs of cranial nerves are in the human body?",
-        "answer": 12
+        "question": "What is the population of Tokyo in 2023 (in millions)?",
+        "answer": 37.4
     },
     {
-        "question": "What is the speed of the International Space Station in kilometers per hour?",
-        "answer": 27600
+        "question": "What is the gross domestic product (GDP) of India in 2022 (in trillions of USD)?",
+        "answer": 3.5
     },
     {
-        "question": "What is the number of vertebrae in the human cervical spine?",
-        "answer": 7
+        "question": "How many active users does Facebook have worldwide in 2023 (in billions)?",
+        "answer": 2.9
     },
     {
-        "question": "What is the percentage of oxygen in the Earth's crust by weight?",
-        "answer": 46.6
-    },
-    {
-        "question": "What is the average density of the Earth in grams per cubic centimeter?",
-        "answer": 5.52
-    },
-    {
-        "question": "What is the number of natural satellites orbiting Saturn?",
-        "answer": 83
-    },
-    {
-        "question": "What is the approximate number of synapses in the human brain?",
-        "answer": 1000000000000
-    },
-    {
-        "question": "What is the diameter of the Moon in kilometers?",
-        "answer": 3474
-    },
-    {
-        "question": "What is the estimated number of stars in the Andromeda galaxy?",
-        "answer": 1000000000000
-    },
-    {
-        "question": "What is the number of ribs in the human body?",
-        "answer": 24
-    },
-    {
-        "question": "What is the distance from the Earth to the nearest spiral galaxy, the Andromeda galaxy, in light-years?",
-        "answer": 2537000
-    },
-    {
-        "question": "What is the average gestation period for an African elephant in days?",
-        "answer": 645
-    },
-    {
-        "question": "What is the percentage of carbon dioxide in the Earth's atmosphere?",
-        "answer": 0.04
-    },
-    {
-        "question": "What is the height of the tallest mountain in the solar system, Olympus Mons, on Mars, in kilometers?",
-        "answer": 22
-    },
-    {
-        "question": "What is the estimated age of the Sun in billion years?",
-        "answer": 4.6
-    },
-    {
-        "question": "What is the number of bones in a newborn human baby?",
-        "answer": 270
-    },
-    {
-        "question": "What is the distance from the Earth to the nearest known black hole, V616 Monocerotis, in light-years?",
-        "answer": 3000
-    },
-    {
-        "question": "What is the number of cells in the human body?",
-        "answer": 37000000000000
-    },
-    {
-        "question": "What is the average number of hairs on a human head?",
-        "answer": 100000
-    },
-    {
-        "question": "What is the number of base pairs in the human genome?",
-        "answer": 3200000000
-    },
-    {
-        "question": "What is the average volume of a human cell in cubic micrometers?",
-        "answer": 1000
-    },
-    {
-        "question": "What is the number of chemical elements in the human body?",
-        "answer": 60
-    },
-    {
-        "question": "What is the distance from the Earth to the farthest man-made object, Voyager 1, in kilometers?",
-        "answer": 22700000000
-    },
-    {
-        "question": "What is the atomic number of lead?",
-        "answer": 82
-    },
-    {
-        "question": "How many vertebrae are in the human thoracic spine?",
-        "answer": 12
-    },
-    {
-        "question": "What is the boiling point of mercury in degrees Celsius?",
-        "answer": 356.7
-    },
-    {
-        "question": "What is the number of bones in a human adult hand?",
-        "answer": 27
-    },
-    {
-        "question": "What is the distance from the Sun to the dwarf planet Pluto in kilometers?",
-        "answer": 5900000000
-    },
-    {
-        "question": "What is the total number of chromosomes in a human somatic cell?",
-        "answer": 46
-    },
-    {
-        "question": "What is the length of the DNA molecule in the human nucleus in meters?",
-        "answer": 2
-    },
-    {
-        "question": "What is the number of muscles in the human body?",
-        "answer": 640
-    },
-    {
-        "question": "How many elements are there in the d-block of the periodic table?",
-        "answer": 40
-    },
-    {
-        "question": "What is the melting point of iron in degrees Celsius?",
-        "answer": 1538
-    },
-    {
-        "question": "What is the atomic mass of hydrogen?",
-        "answer": 1.008
-    },
-    {
-        "question": "How many taste buds does the average human tongue have?",
-        "answer": 10000
-    },
-    {
-        "question": "What is the wavelength of red light in nanometers?",
-        "answer": 700
-    },
-    {
-        "question": "What is the specific heat capacity of water in joules per gram per degree Celsius?",
-        "answer": 4.186
-    },
-    {
-        "question": "What is the maximum number of electrons that can be held in the n=3 shell of an atom?",
-        "answer": 18
-    },
-    {
-        "question": "What is the speed of the fastest land animal, the cheetah, in kilometers per hour?",
-        "answer": 120
-    },
-    {
-        "question": "How many millimeters are there in an inch?",
-        "answer": 25.4
-    },
-    {
-        "question": "What is the freezing point of ethanol in degrees Celsius?",
-        "answer": -114.1
-    },
-    {
-        "question": "How many pairs of chromosomes do humans have?",
-        "answer": 23
-    },
-    {
-        "question": "What is the maximum recorded depth of the ocean in meters?",
-        "answer": 10994
-    },
-    {
-        "question": "How many protons are in an atom of carbon?",
-        "answer": 6
-    },
-    {
-        "question": "What is the density of gold in grams per cubic centimeter?",
-        "answer": 19.32
-    },
-    {
-        "question": "How many known chemical elements are there?",
-        "answer": 118
-    },
-    {
-        "question": "What is the acceleration due to gravity on Earth's surface in meters per second squared?",
-        "answer": 9.81
-    },
-    {
-        "question": "What is the typical lifespan of a red blood cell in days?",
-        "answer": 120
-    },
-    {
-        "question": "What is the number of moons orbiting Jupiter?",
+        "question": "What is the life expectancy in the United States as of 2023 (in years)?",
         "answer": 79
     },
     {
-        "question": "What is the molecular weight of water (H2O)?",
-        "answer": 18.015
+        "question": "What is the total area of the Sahara Desert in square kilometers?",
+        "answer": 9100000
     },
     {
-        "question": "What is the atomic number of uranium?",
-        "answer": 92
+        "question": "How much does the Hubble Space Telescope weigh (in kilograms)?",
+        "answer": 11110
     },
     {
-        "question": "What is the speed of the fastest bird, the peregrine falcon, in kilometers per hour?",
-        "answer": 389
+        "question": "What is the annual water discharge of the Nile River at its mouth (in cubic kilometers)?",
+        "answer": 84
     },
     {
-        "question": "What is the wavelength of blue light in nanometers?",
-        "answer": 475
+        "question": "What is the speed of light in a vacuum in kilometers per second?",
+        "answer": 299792
     },
     {
-        "question": "What is the number of hydrogen atoms in one molecule of methane (CH4)?",
+        "question": "How many official languages are spoken in Switzerland?",
         "answer": 4
     },
     {
-        "question": "What is the melting point of tungsten in degrees Celsius?",
-        "answer": 3422
+        "question": "What is the annual production of wheat worldwide in 2022 (in million metric tons)?",
+        "answer": 780
     },
     {
-        "question": "What is the density of lead in grams per cubic centimeter?",
-        "answer": 11.34
+        "question": "How many species of birds are known to exist worldwide?",
+        "answer": 10500
     },
     {
-        "question": "How many permanent teeth does an adult human have?",
-        "answer": 32
+        "question": "What is the average temperature on Mars (in degrees Celsius)?",
+        "answer": -63
     },
     {
-        "question": "What is the atomic number of helium?",
-        "answer": 2
+        "question": "How many books are in the Library of Congress?",
+        "answer": 17000000
     },
     {
-        "question": "What is the boiling point of water in degrees Fahrenheit?",
-        "answer": 212
+        "question": "What is the depth of the Mariana Trench in meters?",
+        "answer": 10994
     },
     {
-        "question": "What is the number of valence electrons in a chlorine atom?",
-        "answer": 7
+        "question": "How many films have been produced by Bollywood in 2022?",
+        "answer": 1800
     },
     {
-        "question": "What is the energy of a photon with a wavelength of 500 nm in electronvolts?",
-        "answer": 2.48
+        "question": "What is the average internet speed globally in 2023 (in Mbps)?",
+        "answer": 96
     },
     {
-        "question": "What is the distance light travels in one year (one light-year) in kilometers?",
-        "answer": 9460730472580.8
+        "question": "What is the population of the world in 2023 (in billions)?",
+        "answer": 7.9
     },
     {
-        "question": "What is the density of mercury in grams per cubic centimeter?",
-        "answer": 13.534
+        "question": "How many paintings did Pablo Picasso produce in his lifetime?",
+        "answer": 13500
     },
     {
-        "question": "How many amino acids are used to make proteins in the human body?",
-        "answer": 20
+        "question": "What is the diameter of Earth at the equator in kilometers?",
+        "answer": 12742
     },
     {
-        "question": "What is the average resting heart rate for adults in beats per minute?",
-        "answer": 72
+        "question": "How many countries are there in the world as of 2023?",
+        "answer": 195
     },
     {
-        "question": "What is the number of bones in a giraffe's neck?",
-        "answer": 7
+        "question": "What is the length of the Great Wall of China in kilometers?",
+        "answer": 21196
     },
     {
-        "question": "What is the orbital period of Halley's Comet in years?",
-        "answer": 75.3
+        "question": "How many people are employed in the technology sector in the United States as of 2023 (in millions)?",
+        "answer": 12.1
     },
     {
-        "question": "What is the specific gravity of ice?",
-        "answer": 0.92
+        "question": "What is the annual coffee consumption worldwide in 2022 (in million metric tons)?",
+        "answer": 166
     },
     {
-        "question": "How many carbon atoms are in a benzene molecule (C6H6)?",
+        "question": "What is the volume of Lake Superior in cubic kilometers?",
+        "answer": 12300
+    },
+    {
+        "question": "How many active volcanoes are there in the world?",
+        "answer": 1300
+    },
+    {
+        "question": "What is the number of species of mammals currently known to exist?",
+        "answer": 6500
+    },
+    {
+        "question": "What is the speed of sound at sea level in kilometers per hour?",
+        "answer": 1235
+    },
+    {
+        "question": "What is the height of the tallest building in the world, the Burj Khalifa, in meters?",
+        "answer": 828
+    },
+    {
+        "question": "What is the total energy consumption of the United States in 2022 (in quadrillion BTU)?",
+        "answer": 100.2
+    },
+    {
+        "question": "How many official languages are there in the United Nations?",
         "answer": 6
     },
     {
-        "question": "What is the atomic number of neon?",
-        "answer": 10
+        "question": "What is the depth of Crater Lake in Oregon, USA in meters?",
+        "answer": 594
     },
     {
-        "question": "What is the length of the longest recorded human lifespan in years?",
-        "answer": 122
+        "question": "What is the annual rainfall in the Amazon rainforest in millimeters?",
+        "answer": 2300
     },
     {
-        "question": "What is the atomic number of platinum?",
-        "answer": 78
+        "question": "How many episodes are there in the TV show 'Friends'?",
+        "answer": 236
+    },
+    {
+        "question": "What is the length of the Nile River in kilometers?",
+        "answer": 6650
+    },
+    {
+        "question": "What is the total number of elements in the periodic table as of 2023?",
+        "answer": 118
+    },
+    {
+        "question": "How many moons does Jupiter have?",
+        "answer": 80
+    },
+    {
+        "question": "What is the population of New York City in 2023 (in millions)?",
+        "answer": 8.4
+    },
+    {
+        "question": "How many keys are there on a standard piano?",
+        "answer": 88
     }
 ]
