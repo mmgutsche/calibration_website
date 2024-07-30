@@ -29,48 +29,9 @@
 <div id="progress" class="mt-4 mb-4">
     <!-- Display progress if cookies are accepted -->
     <h3>Your Progress</h3>
-    <div id="progressContent">No progress data available. If you do not accept cookies, your progress won't be saved.
+    <div id="progressContent"> This should not be displayed!
     </div>
     <button id="deleteCookiesBtn" class="btn btn-danger d-none" onclick="deleteCookies()">Delete Progress</button>
 </div>
-<script>
-    function displayProgress() {
-        if (document.cookie.includes('cookieConsent=true')) {
-            const testResults = getCookie('test_results');
-            if (testResults) {
-                try {
-                    const results = JSON.parse(testResults);
-                    let progressContent = "<ul>";
-                    results.forEach(result => {
-                        progressContent += `<li>${result.date}: ${result.score}%</li>`;
-                    });
-                    progressContent += "</ul>";
-                    document.getElementById('progressContent').innerHTML = progressContent;
-                    document.getElementById('deleteCookiesBtn').classList.remove('d-none');
-                } catch (e) {
-                    console.error("Error parsing test results:", e);
-                    document.getElementById('progressContent').innerHTML = "Error loading progress data.";
-                }
-            } else {
-                document.getElementById('progressContent').innerHTML = "No progress data available.";
-            }
-        } else {
-            document.getElementById('progressContent').innerHTML = "Cookie consent not given. Progress won't be saved.";
-        }
-    }
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
-    function deleteCookies() {
-        document.cookie = "test_results=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        location.reload();
-    }
-    window.onload = function () {
-        checkCookie();
-        displayProgress();
-    };
-</script>
 
 {% endblock %}

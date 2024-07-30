@@ -1,17 +1,37 @@
+import os
+import json
+import random
+
+
 from flask import (
     Flask,
     request,
     jsonify,
     render_template,
     make_response,
+    send_from_directory,
     redirect,
     url_for,
 )
-import json
-import random
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+
+
 from datetime import datetime
+
+import logging
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+DEBUG = os.getenv("DEBUG", "False").lower() in [
+    "true",
+    "1",
+]  # This converts the DEBUG environment variable to a boolean
+
+if DEBUG:
+    logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 
@@ -26,6 +46,15 @@ with open("questions.json", "r") as f:
 @app.route("/")
 def index():
     return render_template("index.html")
+
+
+@app.route("/favicon.ico")
+def favicon():
+    return send_from_directory(
+        os.path.join(app.root_path, "static"),
+        "favicon.ico",
+        mimetype="image/vnd.microsoft.icon",
+    )
 
 
 @app.route("/questions")
@@ -59,49 +88,76 @@ def submit():
 
 
 def validate_input_data(data):
-    if not data or "questions" not in data or "answers" not in data:
-        return jsonify({"error": "Invalid input data"}), 400
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+    if "questions" not in data or "answers" not in data:
+        return jsonify({"error": "Questions or answers missing"}), 400
+    if not isinstance(data["questions"], list) or not isinstance(data["answers"], dict):
+        return jsonify({"error": "Incorrect data types for questions or answers"}), 400
 
-    selected_questions = data.get("questions")
-    answers = data.get("answers")
-
-    if not isinstance(selected_questions, list) or not isinstance(answers, dict):
-        return jsonify({"error": "Invalid selected questions or answers"}), 400
-
-    for i, _ in enumerate(selected_questions):
-        lower = answers.get(f"lower_{i}")
-        upper = answers.get(f"upper_{i}")
-
+    for i, question in enumerate(data["questions"]):
+        if f"lower_{i}" not in data["answers"] or f"upper_{i}" not in data["answers"]:
+            return jsonify({"error": f"Bounds for question {i} not provided"}), 400
         try:
-            lower = float(lower)
-            upper = float(upper)
+            float(data["answers"][f"lower_{i}"])
+            float(data["answers"][f"upper_{i}"])
         except ValueError:
-            return jsonify({"error": "Invalid answer format"}), 400
+            return (
+                jsonify({"error": f"Non-numeric bounds provided for question {i}"}),
+                400,
+            )
 
     return None
 
 
+@app.before_request
+def check_cookies():
+    if "test_results" in request.cookies:
+        try:
+            json.loads(request.cookies["test_results"])
+        except json.JSONDecodeError:
+            response = make_response(
+                jsonify({"error": "Invalid cookie data, reset required"}), 400
+            )
+            response.set_cookie("test_results", "", expires=0, path="/")
+            return response
+
+
 def handle_cookie_consent(request, test_result, score, detailed_results):
     cookie_consent = request.cookies.get("cookieConsent")
+    app.logger.info(f"Cookie consent: {cookie_consent}")
+    resp = make_response(
+        jsonify({"score": score, "detailed_results": detailed_results})
+    )
+
     if cookie_consent == "true":
         existing_results = request.cookies.get("test_results")
         try:
-            if existing_results:
-                test_results = json.loads(existing_results)
-            else:
-                test_results = []
-        except (json.JSONDecodeError, TypeError):
-            test_results = []
+            test_results = json.loads(existing_results) if existing_results else []
+            app.logger.debug(f"Existing test results: {test_results}")
 
+        except json.JSONDecodeError:
+            app.logger.info("Malformed JSON detected, resetting cookie.")
+            resp.set_cookie("test_results", "", expires=0, path="/")
+            return resp  # Early return to skip processing with bad data
+        # Process and store new test result
         test_results.append(test_result)
+        test_results = test_results[-10:]  # Keep only the last 10 entries
+        json_data = json.dumps(test_results)
+        app.logger.debug(f"Serialized JSON for cookie: {json_data}")
+        # Decide settings based on environment
+        cookie_settings = {"samesite": "Lax" if DEBUG else "None", "secure": not DEBUG}
 
-        resp = make_response(
-            jsonify({"score": score, "detailed_results": detailed_results})
+        # Reset and set the new cookie data
+        resp.set_cookie(
+            "test_results",
+            json_data,
+            max_age=3600 * 24 * 365,
+            path="/",
+            **cookie_settings,
         )
-        resp.set_cookie("test_results", json.dumps(test_results))
-        return resp
-    else:
-        return jsonify({"score": score, "detailed_results": detailed_results})
+
+    return resp
 
 
 def calculate_score(selected_questions, answers):
@@ -132,4 +188,5 @@ def ratelimit_handler(e):
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    # showing different logging levels
+    app.run(debug=DEBUG)
