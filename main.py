@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends, HTTPException, status
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -10,15 +10,8 @@ import os
 import logging
 
 from dotenv import load_dotenv
-
-app = FastAPI()
-
-# Static files
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# Templates
-templates = Jinja2Templates(directory="templates")
-
+from sqlalchemy.ext.asyncio import AsyncSession
+from calibration_website import models, schemas, auth, database
 
 load_dotenv()
 
@@ -29,6 +22,55 @@ DEBUG = os.getenv("DEBUG", "False").lower() in [
 
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
+
+
+app = FastAPI()
+
+
+@app.post("/users/", response_model=schemas.UserOut)
+async def create_user(
+    user: schemas.UserCreate, db: AsyncSession = Depends(database.async_session)
+):
+    hashed_password = auth.get_password_hash(user.password)
+    db_user = models.User(username=user.username, hashed_password=hashed_password)
+    db.add(db_user)
+    await db.commit()
+    await db.refresh(db_user)
+    return db_user
+
+
+@app.post("/token")
+async def login_for_access_token(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: AsyncSession = Depends(database.async_session),
+):
+    user = await authenticate_user(form_data.username, form_data.password, db)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token = auth.create_access_token(data={"sub": user.username})
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+async def authenticate_user(username: str, password: str, db: AsyncSession):
+    async with db() as session:
+        result = await session.execute(
+            select(models.User).filter(models.User.username == username)
+        )
+        user = result.scalars().first()
+        if user and auth.verify_password(password, user.hashed_password):
+            return user
+        return None
+
+
+# Static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Templates
+templates = Jinja2Templates(directory="templates")
 
 
 # Configure rate limiter
