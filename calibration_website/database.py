@@ -1,11 +1,28 @@
+import os
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
-from databases import Database
+from sqlalchemy.orm import sessionmaker, declarative_base
 
-DATABASE_URL = "mysql+aiomysql://username:password@localhost/dbname"
+# Load environment variables
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Get the database URL from environment variables
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./production.db")
 
 engine = create_async_engine(DATABASE_URL, echo=True)
-async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+SessionLocal = sessionmaker(
+    autocommit=False, autoflush=False, bind=engine, class_=AsyncSession
+)
 
-# For queries using `databases` library
-database = Database(DATABASE_URL)
+Base = declarative_base()
+
+
+async def get_session():
+    async with SessionLocal() as session:
+        yield session
+
+
+async def init_db():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)

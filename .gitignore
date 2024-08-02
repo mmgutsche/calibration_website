@@ -3,3 +3,7 @@ venv/
 __pycache__/
 .env
 .DS_Store
+production.db
+test.db
+tmp.txt
+calibration_website.egg-info/

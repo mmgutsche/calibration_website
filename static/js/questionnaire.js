@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const errorBanner = document.getElementById('errorBanner');
         errorBanner.innerText = message;
         errorBanner.classList.remove('d-none');
+        setTimeout(() => $('#errorBanner').fadeOut(), 5000); // Auto-hide error after 5 seconds
     }
 
     function hideError() {
@@ -105,45 +106,11 @@ document.addEventListener('DOMContentLoaded', () => {
         errorBanner.classList.add('d-none');
         errorBanner.innerText = '';
     }
-    function displayProgress() {
-        if (document.cookie.includes('cookieConsent=true')) {
-            const testResults = getCookie('test_results');
-            console.log("Raw cookie data:", testResults);  // Log the raw cookie data
-            if (testResults) {
-                try {
-                    console.log("Attempting to parse JSON:", testResults);
-                    const results = JSON.parse(testResults);
-                    if (results.length > 0) {
-                        let progressContent = results.map(result => `${result.date}: ${result.score}%`).join(', ');
-                        document.getElementById('progressContent').innerHTML = progressContent;
-                        document.getElementById('deleteCookiesBtn').classList.remove('d-none');
-                    } else {
-                        document.getElementById('progressContent').innerHTML = "No progress data available.";
-                    }
-                } catch (e) {
-                    console.error("Error parsing test results:", e);
-                    document.getElementById('progressContent').innerHTML = "Error loading progress data.";
-                }
-            } else {
-                document.getElementById('progressContent').innerHTML = "No progress data available.";
-            }
-        } else {
-            console.log("Cookie consent not given.");  // Debugging log
-            document.getElementById('progressContent').innerHTML = "Cookie consent not given. Progress won't be saved.";
-        }
+
+    function displayMessage(message) {
+        const messageDiv = document.getElementById('message');
+        messageDiv.innerText = message;
+        messageDiv.classList.remove('d-none');
+        setTimeout(() => $('#message').fadeOut(), 5000); // Auto-hide message after 5 seconds
     }
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
-    function deleteCookies() {
-        document.cookie = "test_results=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        location.reload();
-    }
-    window.onload = function () {
-        console.log("Window loaded");  // Debugging log
-        checkCookie();
-        displayProgress();
-    };
 });

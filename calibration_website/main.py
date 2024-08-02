@@ -1,17 +1,26 @@
 from fastapi import FastAPI, Request, Depends, HTTPException, status
-from fastapi.responses import JSONResponse, FileResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
+from fastapi.responses import JSONResponse, RedirectResponse, FileResponse
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from starlette.middleware.sessions import SessionMiddleware
+from calibration_website.auth import (
+    get_password_hash,
+    authenticate_user,
+    create_access_token,
+)
+from calibration_website.database import get_session, init_db
+from calibration_website.models import User
+from calibration_website.schemas import UserCreate, UserOut
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+from contextlib import asynccontextmanager
+import os
 import json
 import random
-from datetime import datetime
-import os
-
 import logging
-
 from dotenv import load_dotenv
-from sqlalchemy.ext.asyncio import AsyncSession
-from calibration_website import models, schemas, auth, database
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
+
 
 load_dotenv()
 
@@ -24,46 +33,18 @@ if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
 
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    database_url = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./production.db")
+    # Check if the database file exists, if not, create it
+    if database_url.startswith("sqlite+aiosqlite:///"):
+        db_path = database_url.replace("sqlite+aiosqlite:///", "")
+        if not os.path.exists(db_path):
+            await init_db()
+    yield
 
 
-@app.post("/users/", response_model=schemas.UserOut)
-async def create_user(
-    user: schemas.UserCreate, db: AsyncSession = Depends(database.async_session)
-):
-    hashed_password = auth.get_password_hash(user.password)
-    db_user = models.User(username=user.username, hashed_password=hashed_password)
-    db.add(db_user)
-    await db.commit()
-    await db.refresh(db_user)
-    return db_user
-
-
-@app.post("/token")
-async def login_for_access_token(
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    db: AsyncSession = Depends(database.async_session),
-):
-    user = await authenticate_user(form_data.username, form_data.password, db)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    access_token = auth.create_access_token(data={"sub": user.username})
-    return {"access_token": access_token, "token_type": "bearer"}
-
-
-async def authenticate_user(username: str, password: str, db: AsyncSession):
-    async with db() as session:
-        result = await session.execute(
-            select(models.User).filter(models.User.username == username)
-        )
-        user = result.scalars().first()
-        if user and auth.verify_password(password, user.hashed_password):
-            return user
-        return None
+app = FastAPI(lifespan=lifespan)
 
 
 # Static files
@@ -78,11 +59,75 @@ templates = Jinja2Templates(directory="templates")
 # Load questions from a JSON file
 with open("questions.json", "r") as f:
     questions = json.load(f)
+# Add SessionMiddleware
+app.add_middleware(
+    SessionMiddleware, secret_key=os.getenv("SECRET_KEY", "your_secret_key")
+)
+
+
+@app.post("/register", response_model=UserOut)
+async def create_user(user: UserCreate, db: AsyncSession = Depends(get_session)):
+    db_user = await db.execute(select(User).where(User.username == user.username))
+    if db_user.scalars().first() is not None:
+        raise HTTPException(status_code=400, detail="Username already registered")
+    hashed_password = get_password_hash(user.password)
+    new_user = User(username=user.username, hashed_password=hashed_password)
+    db.add(new_user)
+    await db.commit()
+    await db.refresh(new_user)
+    return new_user
+
+
+@app.post("/token")
+async def login_for_access_token(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: AsyncSession = Depends(get_session),
+):
+    user = await authenticate_user(form_data.username, form_data.password, db)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token = create_access_token(data={"sub": user.username})
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+@app.get("/logout")
+async def logout(request: Request):
+    request.session.clear()
+    return RedirectResponse(url="/")
+
+
+@app.get("/profile")
+async def profile(request: Request):
+    if not request.session.get("is_authenticated"):
+        return RedirectResponse(url="/")
+    return templates.TemplateResponse(
+        "profile.html",
+        {"request": request, "username": request.session.get("username")},
+    )
+
+
+@app.get("/check-auth")
+async def check_auth(request: Request):
+    is_authenticated = request.session.get("is_authenticated", False)
+    return {"is_authenticated": is_authenticated}
+
+
+def get_user(request: Request):
+    # This function should check user's login status
+    # For example, it might check a cookie, token, or session
+    return {"user_is_authenticated": request.session.get("is_authenticated", False)}
 
 
 @app.get("/")
-async def index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+async def main(request: Request, user=Depends(get_user)):
+    return templates.TemplateResponse(
+        "index.html",
+        {"request": request, "user_is_authenticated": user["user_is_authenticated"]},
+    )
 
 
 @app.get("/favicon.ico")
@@ -173,5 +218,6 @@ def calculate_score(selected_questions, answers):
 
 
 if __name__ == "__main__":
-    # showing different logging levels
-    app.run(debug=DEBUG)
+    import uvicorn
+
+    uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)
