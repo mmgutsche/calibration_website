@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             displayMessage('Logged in successfully!');
             $('#loginModal').modal('hide'); // Close the modal on success
-            updateNavigation(true);
+            updateNavigation(true, username);
         } else {
             const error = await response.json();
             displayError(`Error: ${error.detail}`);
@@ -60,22 +60,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function updateNavigation(isAuthenticated) {
+    function updateNavigation(isAuthenticated, username = "") {
+        console.log("Updating navigation, isAuthenticated:", isAuthenticated);
         const loginLink = document.getElementById('login-link');
         const registerLink = document.getElementById('register-link');
         const profileLink = document.getElementById('profile-link');
         const logoutLink = document.getElementById('logout-link');
+        const usernamePlaceholder = document.getElementById('username-placeholder');
 
         if (isAuthenticated) {
             loginLink.classList.add('d-none');
             registerLink.classList.add('d-none');
             profileLink.classList.remove('d-none');
             logoutLink.classList.remove('d-none');
+            usernamePlaceholder.textContent = `Logged in as ${username} (Logout)`;
         } else {
             loginLink.classList.remove('d-none');
             registerLink.classList.remove('d-none');
             profileLink.classList.add('d-none');
             logoutLink.classList.add('d-none');
+            usernamePlaceholder.textContent = "";
         }
     }
 
@@ -94,11 +98,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.onload = function () {
-        // Check if the user is authenticated on page load
+        console.log("Checking authentication status on page load");
         fetch('/check-auth')
             .then(response => response.json())
             .then(data => {
-                updateNavigation(data.is_authenticated);
+                console.log("Authentication status:", data.is_authenticated, "username:", data.username);
+                updateNavigation(data.is_authenticated, data.username);
             })
             .catch(error => {
                 console.error('Error checking authentication status:', error);

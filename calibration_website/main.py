@@ -60,8 +60,12 @@ templates = Jinja2Templates(directory="templates")
 with open("questions.json", "r") as f:
     questions = json.load(f)
 # Add SessionMiddleware
+
+
 app.add_middleware(
-    SessionMiddleware, secret_key=os.getenv("SECRET_KEY", "your_secret_key")
+    SessionMiddleware,
+    secret_key=os.getenv("SECRET_KEY", "your_secret_key"),
+    max_age=3600,  # Session will expire after 1 hour
 )
 
 
@@ -80,6 +84,7 @@ async def create_user(user: UserCreate, db: AsyncSession = Depends(get_session))
 
 @app.post("/token")
 async def login_for_access_token(
+    request: Request,
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: AsyncSession = Depends(get_session),
 ):
@@ -91,6 +96,8 @@ async def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token = create_access_token(data={"sub": user.username})
+    request.session["is_authenticated"] = True
+    request.session["username"] = user.username
     return {"access_token": access_token, "token_type": "bearer"}
 
 
@@ -113,7 +120,8 @@ async def profile(request: Request):
 @app.get("/check-auth")
 async def check_auth(request: Request):
     is_authenticated = request.session.get("is_authenticated", False)
-    return {"is_authenticated": is_authenticated}
+    username = request.session.get("username", "") if is_authenticated else ""
+    return {"is_authenticated": is_authenticated, "username": username}
 
 
 def get_user(request: Request):
