@@ -59,29 +59,34 @@ document.addEventListener('DOMContentLoaded', () => {
             displayError('Logout failed!');
         }
     });
+    // Inside the updateNavigation function
 
     function updateNavigation(isAuthenticated, username = "") {
-        console.log("Updating navigation, isAuthenticated:", isAuthenticated);
+        console.log("Updating navigation, isAuthenticated:", isAuthenticated, "username:", username);
         const loginLink = document.getElementById('login-link');
         const registerLink = document.getElementById('register-link');
         const profileLink = document.getElementById('profile-link');
+        const profileLinkText = document.getElementById('profile-link-text'); // Add this line
         const logoutLink = document.getElementById('logout-link');
-        const usernamePlaceholder = document.getElementById('username-placeholder');
+        const logoutLinkText = document.getElementById('logout-link-text'); // Add this line
 
         if (isAuthenticated) {
             loginLink.classList.add('d-none');
             registerLink.classList.add('d-none');
             profileLink.classList.remove('d-none');
             logoutLink.classList.remove('d-none');
-            usernamePlaceholder.textContent = `Logged in as ${username} (Logout)`;
+            profileLinkText.textContent = `Profile (${username})`; // Update profile link text
+            logoutLinkText.textContent = `Log out`; // Update logout link text
         } else {
             loginLink.classList.remove('d-none');
             registerLink.classList.remove('d-none');
             profileLink.classList.add('d-none');
             logoutLink.classList.add('d-none');
-            usernamePlaceholder.textContent = "";
+            profileLinkText.textContent = "Profile"; // Reset profile link text
+            logoutLinkText.textContent = "Log out"; // Reset logout link text
         }
     }
+
 
     function displayMessage(message) {
         const messageDiv = document.getElementById('message');
