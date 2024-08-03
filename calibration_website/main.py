@@ -20,7 +20,6 @@ import logging
 from dotenv import load_dotenv
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from scipy.stats import binom
 
 load_dotenv()
 
@@ -184,10 +183,8 @@ async def submit(request: Request):
     answers = data.get("answers")
 
     score, detailed_results = calculate_score(selected_questions, answers)
-    prob_correct_by_chance = binom.sf(score, len(selected_questions), 0.9)
     response_data = {
-        "score": score,
-        "prob_correct_by_chance": prob_correct_by_chance,
+        "score": float(score),
         "detailed_results": detailed_results,
     }
     print(response_data)
@@ -244,14 +241,7 @@ def calculate_score(selected_questions, answers):
         if correct:
             correct_count += 1
     score = round((correct_count / len(selected_questions)) * 100)
-    prob_correct_by_chance = binom.sf(score, len(selected_questions), 0.9)
-    return JSONResponse(
-        content={
-            "score": score,
-            "detailed_results": detailed_results,
-            "prob_correct_by_chance": prob_correct_by_chance,
-        }
-    )
+    return score, detailed_results
 
 
 if __name__ == "__main__":

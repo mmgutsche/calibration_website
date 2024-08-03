@@ -21,10 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             <label>${q.question}</label>
                         </div>
                         <div class="col-md-2">
-                            <input type="number" name="lower_${index}" class="form-control number-input" placeholder="Lower bound">
+                            <input type="text" name="lower_${index}" class="form-control number-input" placeholder="e.g., -1.5e-7">
                         </div>
                         <div class="col-md-2">
-                            <input type="number" name="upper_${index}" class="form-control number-input" placeholder="Upper bound">
+                            <input type="text" name="upper_${index}" class="form-control number-input" placeholder="e.g., 3.2e9">
                         </div>
                         <div class="col-md-4 correct-answer d-none">
                             <span class="text-success">Correct answer: ${q.answer}</span>
@@ -34,11 +34,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 container.innerHTML += questionHtml;
             });
 
-            // Initialize Cleave.js on number input fields
             document.querySelectorAll('.number-input').forEach(input => {
-                new Cleave(input, {
-                    numeral: true,
-                    numeralThousandsGroupStyle: 'thousand'
+                input.addEventListener('input', function () {
+                    try {
+                        const number = new BigNumber(this.value);
+                        if (!number.isNaN() && number.isFinite()) { // Check if number is finite
+                            this.classList.remove('is-invalid');
+                            this.classList.add('is-valid');
+                        } else {
+                            this.classList.add('is-invalid');
+                            this.classList.remove('is-valid');
+                        }
+                    } catch (e) {
+                        this.classList.add('is-invalid');
+                        this.classList.remove('is-valid');
+                    }
                 });
             });
         })
@@ -60,13 +70,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 allFieldsFilled = false;
                 break;
             }
-            // Ensure all values are numbers
-            let numberValue = parseFloat(value.replace(/,/g, ''));
-            if (isNaN(numberValue)) {
+            // Parse and validate using BigNumber to handle all numeric formats including scientific notation
+            const number = new BigNumber(value.replace(/,/g, '')); // Clean up commas for thousand separators
+
+            if (number.isNaN() || !number.isFinite()) {
                 displayError(`Invalid number: ${value}`);
                 return;
             }
-            answers[key] = numberValue;
+
+            // Store the numeric value as a string to preserve any formatting (like scientific notation)
+            answers[key] = number.toString();
         }
 
         if (!allFieldsFilled) {
@@ -109,6 +122,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const formContainer = document.getElementById('calibrationForm'); // Place this in the global scope or within each function that needs it
         const resultContainer = document.getElementById('result');
         resultContainer.innerHTML = ''; // Clear previous results
+
+        // Display the overall score at the top of the result container
+        const scoreCardHtml = `
+        <div class="card bg-info text-white mb-4">
+            <div class="card-header">Your Overall Score</div>
+            <div class="card-body">
+                <h4 class="card-title">Score: ${result.score} %</h4>
+            </div>
+        </div>
+    `;
+        resultContainer.innerHTML += scoreCardHtml;
+
         result.detailed_results.forEach((item) => {
             const cardClass = item.correct ? 'bg-success text-white' : 'bg-danger text-white';
             const cardHtml = `
