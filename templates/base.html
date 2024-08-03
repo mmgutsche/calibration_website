@@ -129,8 +129,7 @@
     <!-- Local JavaScript files, loaded with 'defer' to ensure they load after the HTML document is parsed -->
     <script defer src="/static/js/cookieConsent.js"></script> <!-- Verify this path is correct -->
     <script defer src="/static/js/auth.js"></script> <!-- Verify this path is correct -->
-    <script defer src="/static/js/questionnaire.js"></script> <!-- Verify this path is correct -->
-
+        {% block scripts %}{% endblock %}
 </body>
 
 </html>

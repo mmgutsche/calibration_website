@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Take the Calibration Test{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="display-4">Calibration Questionnaire</h1>
+    <form id="calibrationForm">
+        <div id="questionsContainer">
+            <!-- Questions will be dynamically inserted here by questionnaire.js -->
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+    </form>
+    <div id="result" class="row d-none">
+        <!-- Result cards will be inserted here by questionnaire.js -->
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script defer src="/static/js/questionnaire.js"></script>
+{% endblock %}

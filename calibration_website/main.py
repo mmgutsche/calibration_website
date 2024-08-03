@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request, Depends, HTTPException, status
 from fastapi.responses import JSONResponse, RedirectResponse, FileResponse
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm
 from starlette.middleware.sessions import SessionMiddleware
 from calibration_website.auth import (
     get_password_hash,
@@ -20,7 +20,7 @@ import logging
 from dotenv import load_dotenv
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-
+from scipy.stats import binom
 
 load_dotenv()
 
@@ -156,6 +156,22 @@ def get_questions():
     return JSONResponse(content=random_questions)
 
 
+@app.get("/questionnaire")
+async def questionnaire(request: Request, user=Depends(get_user)):
+    return templates.TemplateResponse(
+        "questionnaire.html",
+        {"request": request, "user_is_authenticated": user["user_is_authenticated"]},
+    )
+
+
+@app.get("/how-to-improve")
+async def how_to_improve(request: Request, user=Depends(get_user)):
+    return templates.TemplateResponse(
+        "how-to-improve.html",
+        {"request": request, "user_is_authenticated": user["user_is_authenticated"]},
+    )
+
+
 @app.post("/submit")
 async def submit(request: Request):
     data = await request.json()
@@ -168,8 +184,14 @@ async def submit(request: Request):
     answers = data.get("answers")
 
     score, detailed_results = calculate_score(selected_questions, answers)
-
-    return JSONResponse(content={"score": score, "detailed_results": detailed_results})
+    prob_correct_by_chance = binom.sf(score, len(selected_questions), 0.9)
+    response_data = {
+        "score": score,
+        "prob_correct_by_chance": prob_correct_by_chance,
+        "detailed_results": detailed_results,
+    }
+    print(response_data)
+    return JSONResponse(content=response_data)
 
 
 def validate_input_data(data):
@@ -222,7 +244,14 @@ def calculate_score(selected_questions, answers):
         if correct:
             correct_count += 1
     score = round((correct_count / len(selected_questions)) * 100)
-    return score, detailed_results
+    prob_correct_by_chance = binom.sf(score, len(selected_questions), 0.9)
+    return JSONResponse(
+        content={
+            "score": score,
+            "detailed_results": detailed_results,
+            "prob_correct_by_chance": prob_correct_by_chance,
+        }
+    )
 
 
 if __name__ == "__main__":

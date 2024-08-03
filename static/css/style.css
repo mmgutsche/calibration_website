@@ -1,25 +1,25 @@
-/* static/css/style.css */
-
-body {
-    font-family: Arial, sans-serif;
-}
-
-h1 {
-    text-align: center;
+.card {
     margin-top: 20px;
+    padding: 20px;
 }
 
-.container {
-    max-width: 600px;
-    margin: auto;
+/* Optional: Add more specific styling if needed */
+.bg-success {
+    background-color: #28a745;
+    /* Bootstrap default, redefined for consistency or custom shade */
 }
 
-.input-group {
-    margin-top: 10px;
+.bg-danger {
+    background-color: #dc3545;
+    /* Bootstrap default, redefined for consistency or custom shade */
 }
 
-#result {
-    text-align: center;
-    font-size: 1.2em;
-    font-weight: bold;
+.card-title {
+    font-size: 1.2rem;
+    /* Larger title font */
+}
+
+.card-text {
+    font-size: 1rem;
+    /* Readable text size */
 }

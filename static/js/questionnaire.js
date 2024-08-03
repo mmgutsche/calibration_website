@@ -1,9 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("questionnaire.js loaded"); // Debugging statement
+
     let selectedQuestions = [];
 
     fetch('/questions')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Network response was not ok: ${response.statusText}`);
+            }
+            return response.json();
+        })
         .then(questions => {
+            console.log("Questions fetched:", questions); // Debugging statement
             selectedQuestions = questions;
             const container = document.getElementById('questionsContainer');
             questions.forEach((q, index) => {
@@ -13,10 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             <label>${q.question}</label>
                         </div>
                         <div class="col-md-2">
-                            <input type="text" name="lower_${index}" class="form-control number-input" placeholder="Lower bound">
+                            <input type="number" name="lower_${index}" class="form-control number-input" placeholder="Lower bound">
                         </div>
                         <div class="col-md-2">
-                            <input type="text" name="upper_${index}" class="form-control number-input" placeholder="Upper bound">
+                            <input type="number" name="upper_${index}" class="form-control number-input" placeholder="Upper bound">
                         </div>
                         <div class="col-md-4 correct-answer d-none">
                             <span class="text-success">Correct answer: ${q.answer}</span>
@@ -35,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         })
         .catch(error => {
+            console.error(`Error fetching questions: ${error.message}`); // Debugging statement
             displayError(`Error fetching questions: ${error.message}`);
         });
 
@@ -51,8 +60,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 allFieldsFilled = false;
                 break;
             }
-            // Remove thousands separators before sending to the server
-            answers[key] = value.replace(/,/g, '');
+            // Ensure all values are numbers
+            let numberValue = parseFloat(value.replace(/,/g, ''));
+            if (isNaN(numberValue)) {
+                displayError(`Invalid number: ${value}`);
+                return;
+            }
+            answers[key] = numberValue;
         }
 
         if (!allFieldsFilled) {
@@ -62,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
             hideError();
 
             // Submit the form data
+            console.log('Submitting answers:', answers); // Debugging statement
             fetch('/submit', {
                 method: 'POST',
                 body: JSON.stringify({ questions: selectedQuestions, answers: answers }),
@@ -69,32 +84,53 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json'
                 }
             })
-                .then(response => response.json())
+                .then(response => {
+                    console.log('Received response:', response); // Debugging statement
+                    return response.json();
+                })
                 .then(result => {
+                    console.log('Processed result:', result); // Debugging statement
                     if (result.error) {
                         displayError(result.error);
                     } else {
-                        document.getElementById('result').innerText = `Your calibration score is: ${result.score}%`;
-
-                        // Show correct answers
-                        result.detailed_results.forEach((item, index) => {
-                            const questionRow = document.querySelector(`.question-row[data-index="${index}"]`);
-                            const correctAnswerDiv = questionRow.querySelector('.correct-answer');
-                            correctAnswerDiv.classList.remove('d-none');
-                            if (!item.correct) {
-                                correctAnswerDiv.classList.add('text-danger');
-                                correctAnswerDiv.querySelector('span').classList.remove('text-success');
-                            }
-                        });
+                        console.log('Displaying result:', result); // Debugging statement
+                        // Display results on the same page
+                        displayResults(result);
                     }
                 })
                 .catch(error => {
+                    console.error(`Error submitting answers: ${error.message}`, error); // Debugging statement
                     displayError(`Error submitting answers: ${error.message}`);
                 });
         }
     });
 
+    function displayResults(result) {
+        const formContainer = document.getElementById('calibrationForm'); // Place this in the global scope or within each function that needs it
+        const resultContainer = document.getElementById('result');
+        resultContainer.innerHTML = ''; // Clear previous results
+        result.detailed_results.forEach((item) => {
+            const cardClass = item.correct ? 'bg-success text-white' : 'bg-danger text-white';
+            const cardHtml = `
+            <div class="col-lg-4 col-md-6 col-12 mb-3"> <!-- Different sizes for different screens -->
+                <div class="card ${cardClass}">
+                    <div class="card-body">
+                        <h5 class="card-title">${item.question}</h5>
+                        <p class="card-text">Your Guess Range: ${item.lower_bound} to ${item.upper_bound}</p>
+                        <p class="card-text">Correct Answer: ${item.correct_answer}</p>
+                    </div>
+                </div>
+            </div>
+            `;
+            resultContainer.innerHTML += cardHtml;
+        });
+
+        resultContainer.classList.remove('d-none');
+        formContainer.classList.add('d-none'); // Hide the form
+    }
+
     function displayError(message) {
+        console.error(message); // Debugging statement
         const errorBanner = document.getElementById('errorBanner');
         errorBanner.innerText = message;
         errorBanner.classList.remove('d-none');
@@ -108,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displayMessage(message) {
+        console.log(message); // Debugging statement
         const messageDiv = document.getElementById('message');
         messageDiv.innerText = message;
         messageDiv.classList.remove('d-none');
