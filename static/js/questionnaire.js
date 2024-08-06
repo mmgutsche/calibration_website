@@ -16,23 +16,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const container = document.getElementById('questionsContainer');
             questions.forEach((q, index) => {
                 const questionHtml = `
-                    <div class="row mb-3 question-row" data-index="${index}">
-                        <div class="col-md-4">
-                            <label>${q.question}</label>
-                        </div>
-                        <div class="col-md-2">
-                            <input type="text" name="lower_${index}" class="form-control number-input" placeholder="e.g., -1.5e-7">
-                        </div>
-                        <div class="col-md-2">
-                            <input type="text" name="upper_${index}" class="form-control number-input" placeholder="e.g., 3.2e9">
-                        </div>
-                        <div class="col-md-4 correct-answer d-none">
-                            <span class="text-success">Correct answer: ${q.answer}</span>
-                        </div>
+                <div class="row mb-3 question-row" data-index="${index}">
+                    <div class="col-md-4">
+                        <label>${q.question}</label>
                     </div>
-                `;
+                    <div class="col-md-2">
+                        <input type="text" name="lower_${index}" class="form-control number-input" placeholder="e.g., -1.5e-7">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" name="upper_${index}" class="form-control number-input" placeholder="e.g., 3.2e9">
+                    </div>
+                    <div class="col-md-4 result-container d-none"> <!-- Placeholder for results -->
+                        <!-- Result will be dynamically inserted here -->
+                    </div>
+                </div>
+            `;
                 container.innerHTML += questionHtml;
             });
+
 
             document.querySelectorAll('.number-input').forEach(input => {
                 input.addEventListener('input', function () {
@@ -119,40 +120,41 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function displayResults(result) {
-        const formContainer = document.getElementById('calibrationForm'); // Place this in the global scope or within each function that needs it
-        const resultContainer = document.getElementById('result');
-        resultContainer.innerHTML = ''; // Clear previous results
-
-        // Display the overall score at the top of the result container
-        const scoreCardHtml = `
-        <div class="card bg-info text-white mb-4">
-            <div class="card-header">Your Overall Score</div>
-            <div class="card-body">
-                <h4 class="card-title">Score: ${result.score} %</h4>
-            </div>
-        </div>
-    `;
-        resultContainer.innerHTML += scoreCardHtml;
-
-        result.detailed_results.forEach((item) => {
-            const cardClass = item.correct ? 'bg-success text-white' : 'bg-danger text-white';
-            const cardHtml = `
-            <div class="col-lg-4 col-md-6 col-12 mb-3"> <!-- Different sizes for different screens -->
-                <div class="card ${cardClass}">
-                    <div class="card-body">
-                        <h5 class="card-title">${item.question}</h5>
-                        <p class="card-text">Your Guess Range: ${item.lower_bound} to ${item.upper_bound}</p>
-                        <p class="card-text">Correct Answer: ${item.correct_answer}</p>
-                    </div>
-                </div>
-            </div>
-            `;
-            resultContainer.innerHTML += cardHtml;
+        console.log('Displaying results:', result);
+        // Disable all input fields in the form
+        document.querySelectorAll('#calibrationForm input').forEach(input => {
+            input.disabled = true;
         });
 
-        resultContainer.classList.remove('d-none');
-        formContainer.classList.add('d-none'); // Hide the form
+        // Hide the submit button
+        document.querySelector('#calibrationForm button[type="submit"]').style.display = 'none';
+
+        // Display the total score in the new section
+        const scoreContainer = document.getElementById('totalScore');
+        scoreContainer.textContent = `Total Score: ${result.score}%`;
+
+        // Make the results summary section visible
+        document.getElementById('resultsSummary').classList.remove('d-none');
+
+
+        result.detailed_results.forEach((item, index) => {
+            const resultContainer = document.querySelector(`.question-row[data-index="${index}"] .result-container`);
+            if (resultContainer === null) {
+                console.error('No result container found for index:', index);
+                return; // Skip this iteration if no container is found
+            }
+            const cardClass = item.correct ? 'bg-success text-white' : 'bg-danger text-white';
+            // Determine the color based on whether the answer was correct
+            const colorClass = item.correct ? 'text-success' : 'text-danger';
+
+            // Insert the result text with appropriate color
+            resultContainer.innerHTML = `<span class="${colorClass}">${item.correct_answer}</span>`;
+            resultContainer.classList.remove('d-none');
+        });
+
     }
+
+
 
     function displayError(message) {
         console.error(message); // Debugging statement

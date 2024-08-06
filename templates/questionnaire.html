@@ -11,10 +11,14 @@
         </div>
         <button type="submit" class="btn btn-primary mt-3">Submit</button>
     </form>
-    <div id="result" class="row d-none">
-        <!-- Result cards will be inserted here by questionnaire.js -->
-    </div>
+    
 </div>
+<!-- New section for displaying the score and the improvement link -->
+<div id="resultsSummary" class="mt-4 d-none">
+    <div id="totalScore" class="alert alert-success"></div>
+    <a href="how-to-improve.html" class="btn btn-primary">Learn How to Improve</a>
+</div>
+
 {% endblock %}
 
 {% block scripts %}
