@@ -1,6 +1,7 @@
-from fastapi import FastAPI, Request, Depends, HTTPException, status
+from fastapi import FastAPI, Request, Depends, HTTPException, status, Form
 from fastapi.responses import JSONResponse, RedirectResponse, FileResponse
 from fastapi.security import OAuth2PasswordRequestForm
+
 from starlette.middleware.sessions import SessionMiddleware
 from calibration_website.auth import (
     get_password_hash,
@@ -22,6 +23,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
 load_dotenv()
+
 
 DEBUG = os.getenv("DEBUG", "False").lower() in [
     "true",
@@ -68,6 +70,16 @@ app.add_middleware(
 )
 
 
+@app.get("/login")
+async def login_page(request: Request):
+    return templates.TemplateResponse("login-page.html", {"request": request})
+
+
+@app.get("/register")
+async def register_page(request: Request):
+    return templates.TemplateResponse("register-page.html", {"request": request})
+
+
 @app.post("/register", response_model=UserOut)
 async def create_user(user: UserCreate, db: AsyncSession = Depends(get_session)):
     db_user = await db.execute(select(User).where(User.username == user.username))
@@ -85,6 +97,7 @@ async def create_user(user: UserCreate, db: AsyncSession = Depends(get_session))
 async def login_for_access_token(
     request: Request,
     form_data: OAuth2PasswordRequestForm = Depends(),
+    redirect_url: str = Form("/"),
     db: AsyncSession = Depends(get_session),
 ):
     user = await authenticate_user(form_data.username, form_data.password, db)
@@ -97,7 +110,13 @@ async def login_for_access_token(
     access_token = create_access_token(data={"sub": user.username})
     request.session["is_authenticated"] = True
     request.session["username"] = user.username
-    return {"access_token": access_token, "token_type": "bearer"}
+    return JSONResponse(
+        {
+            "access_token": access_token,
+            "token_type": "bearer",
+            "redirect_url": redirect_url,
+        }
+    )
 
 
 @app.get("/logout")
@@ -123,17 +142,27 @@ async def check_auth(request: Request):
     return {"is_authenticated": is_authenticated, "username": username}
 
 
-def get_user(request: Request):
-    # This function should check user's login status
-    # For example, it might check a cookie, token, or session
-    return {"user_is_authenticated": request.session.get("is_authenticated", False)}
+async def get_user(request: Request, redirect: bool = True) -> dict:
+    is_authenticated = request.session.get("is_authenticated", False)
+    if not is_authenticated:
+        if redirect:
+            raise HTTPException(
+                status_code=status.HTTP_307_TEMPORARY_REDIRECT,
+                headers={"Location": "/login"},  # Redirect to login page
+            )
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated"
+            )
+    username = request.session.get("username")
+    return {"username": username, "user_is_authenticated": is_authenticated}
 
 
 @app.get("/")
-async def main(request: Request, user=Depends(get_user)):
+async def main(request: Request):
     return templates.TemplateResponse(
         "index.html",
-        {"request": request, "user_is_authenticated": user["user_is_authenticated"]},
+        {"request": request},
     )
 
 

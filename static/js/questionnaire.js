@@ -143,7 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('No result container found for index:', index);
                 return; // Skip this iteration if no container is found
             }
-            const cardClass = item.correct ? 'bg-success text-white' : 'bg-danger text-white';
             // Determine the color based on whether the answer was correct
             const colorClass = item.correct ? 'text-success' : 'text-danger';
 
@@ -170,11 +169,5 @@ document.addEventListener('DOMContentLoaded', () => {
         errorBanner.innerText = '';
     }
 
-    function displayMessage(message) {
-        console.log(message); // Debugging statement
-        const messageDiv = document.getElementById('message');
-        messageDiv.innerText = message;
-        messageDiv.classList.remove('d-none');
-        setTimeout(() => $('#message').fadeOut(), 5000); // Auto-hide message after 5 seconds
-    }
+
 });

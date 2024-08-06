@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('register-form').addEventListener('submit', async function (event) {
+    document.getElementById('register-form')?.addEventListener('submit', async function (event) {
         event.preventDefault();
         const username = document.getElementById('register-username').value;
         const password = document.getElementById('register-password').value;
@@ -14,14 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (response.ok) {
             displayMessage('User registered successfully!');
-            $('#registerModal').modal('hide'); // Close the modal on success
+            window.location.href = "/login"; // Redirect to login page on success
         } else {
             const error = await response.json();
             displayError(`Error: ${error.detail}`);
         }
     });
 
-    document.getElementById('login-form').addEventListener('submit', async function (event) {
+    document.getElementById('login-form')?.addEventListener('submit', async function (event) {
         event.preventDefault();
         const username = document.getElementById('login-username').value;
         const password = document.getElementById('login-password').value;
@@ -37,15 +37,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (response.ok) {
             const data = await response.json();
             displayMessage('Logged in successfully!');
-            $('#loginModal').modal('hide'); // Close the modal on success
             updateNavigation(true, username);
+            window.location.href = data.redirect_url; // Redirect to the original or main page
         } else {
             const error = await response.json();
             displayError(`Error: ${error.detail}`);
         }
     });
 
-    document.getElementById('logout-link').addEventListener('click', async function (event) {
+    document.getElementById('logout-link')?.addEventListener('click', async function (event) {
         event.preventDefault();
 
         const response = await fetch('/logout', {
@@ -55,11 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (response.ok) {
             displayMessage('Logged out successfully!');
             updateNavigation(false);
+            window.location.href = "/"; // Redirect to home page on logout
         } else {
             displayError('Logout failed!');
         }
     });
-    // Inside the updateNavigation function
 
     function updateNavigation(isAuthenticated, username = "") {
         console.log("Updating navigation, isAuthenticated:", isAuthenticated, "username:", username);
@@ -86,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
             logoutLinkText.textContent = "Log out"; // Reset logout link text
         }
     }
-
 
     function displayMessage(message) {
         const messageDiv = document.getElementById('message');
