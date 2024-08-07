@@ -1,5 +1,7 @@
-from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, ForeignKey, Float, DateTime, String, JSON
+from sqlalchemy.orm import relationship
+import datetime
 
 Base = declarative_base()
 
@@ -9,6 +11,28 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True)
+    email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
+    first_name = Column(String, nullable=True)  # Full name
+    last_name = Column(String, nullable=True)  # Full name
+    registration_date = Column(
+        DateTime, default=datetime.datetime.now(datetime.timezone.utc)
+    )
 
-    # Add more fields as necessary
+    date_of_birth = Column(DateTime, nullable=True)  # Date of birth
+    profile_picture = Column(String, nullable=True)  # URL to profile picture
+    preferences = Column(JSON, nullable=True)  # JSON field for user preferences
+
+    scores = relationship("Score", back_populates="user", cascade="all, delete-orphan")
+
+
+class Score(Base):
+    __tablename__ = "scores"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    score = Column(Float, nullable=False)
+    date = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
+    details = Column(JSON, nullable=False)  # Store detailed results as JSON
+
+    user = relationship("User", back_populates="scores")

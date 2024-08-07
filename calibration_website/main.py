@@ -1,19 +1,17 @@
 from fastapi import FastAPI, Request, Depends, HTTPException, status, Form
 from fastapi.responses import JSONResponse, RedirectResponse, FileResponse
 from fastapi.security import OAuth2PasswordRequestForm
-
 from starlette.middleware.sessions import SessionMiddleware
 from calibration_website.auth import (
     get_password_hash,
     authenticate_user,
     create_access_token,
 )
-from calibration_website.database import get_session, init_db
-from calibration_website.models import User
+from calibration_website.database import get_session
+from calibration_website.models import User, Score
 from calibration_website.schemas import UserCreate, UserOut
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from contextlib import asynccontextmanager
+from sqlalchemy import select, delete
 import os
 import json
 import random
@@ -34,18 +32,7 @@ if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    database_url = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./production.db")
-    # Check if the database file exists, if not, create it
-    if database_url.startswith("sqlite+aiosqlite:///"):
-        db_path = database_url.replace("sqlite+aiosqlite:///", "")
-        if not os.path.exists(db_path):
-            await init_db()
-    yield
-
-
-app = FastAPI(lifespan=lifespan)
+app = FastAPI()
 
 
 # Static files
@@ -77,20 +64,49 @@ async def login_page(request: Request):
 
 @app.get("/register")
 async def register_page(request: Request):
-    return templates.TemplateResponse("register-page.html", {"request": request})
+    response = templates.TemplateResponse("register-page.html", {"request": request})
+    return response
 
 
 @app.post("/register", response_model=UserOut)
-async def create_user(user: UserCreate, db: AsyncSession = Depends(get_session)):
-    db_user = await db.execute(select(User).where(User.username == user.username))
-    if db_user.scalars().first() is not None:
-        raise HTTPException(status_code=400, detail="Username already registered")
-    hashed_password = get_password_hash(user.password)
-    new_user = User(username=user.username, hashed_password=hashed_password)
-    db.add(new_user)
-    await db.commit()
-    await db.refresh(new_user)
-    return new_user
+async def create_user(
+    user: UserCreate,
+    db: AsyncSession = Depends(get_session),
+):
+    logging.debug(f"Creating user: {user}")
+
+    try:
+        # Check if username already exists
+        logging.debug(f"Check DB for existing user: {user.username}")
+        existing_user = await db.execute(
+            select(User).where(User.username == user.username)
+        )
+        if existing_user.scalars().first() is not None:
+            logging.warning(f"Username already registered: {user.username}")
+            raise HTTPException(status_code=409, detail="Username already registered")
+
+        hashed_password = get_password_hash(user.password)
+        new_user = User(
+            username=user.username,
+            email=user.email,
+            hashed_password=hashed_password,
+            first_name=user.first_name,
+            last_name=user.last_name,
+            date_of_birth=user.date_of_birth,
+        )
+        db.add(new_user)
+        await db.commit()
+        await db.refresh(new_user)
+        logging.info(f"User created successfully: {user.username}")
+        return new_user
+
+    except HTTPException as e:
+        raise e
+
+    except Exception as e:
+        logging.error(f"Error creating user: {e}")
+        await db.rollback()
+        raise HTTPException(status_code=500, detail="Error creating user")
 
 
 @app.post("/token")
@@ -133,6 +149,34 @@ async def profile(request: Request):
         "profile.html",
         {"request": request, "username": request.session.get("username")},
     )
+
+
+@app.delete("/profile")
+async def delete_profile(
+    request: Request,
+    db: AsyncSession = Depends(get_session),
+):
+    if not request.session.get("is_authenticated"):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated"
+        )
+
+    username = request.session.get("username")
+
+    result = await db.execute(select(User).where(User.username == username))
+    user = result.scalars().first()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+
+    await db.execute(delete(User).where(User.id == user.id))
+    await db.commit()
+
+    request.session.clear()
+
+    return JSONResponse(content={"detail": "User profile deleted successfully"})
 
 
 @app.get("/check-auth")
@@ -185,10 +229,10 @@ def get_questions():
 
 
 @app.get("/questionnaire")
-async def questionnaire(request: Request, user=Depends(get_user)):
+async def questionnaire(request: Request):
     return templates.TemplateResponse(
         "questionnaire.html",
-        {"request": request, "user_is_authenticated": user["user_is_authenticated"]},
+        {"request": request},
     )
 
 
@@ -212,6 +256,18 @@ async def submit(request: Request):
     answers = data.get("answers")
 
     score, detailed_results = calculate_score(selected_questions, answers)
+
+    # Save results to database if user is authenticated
+    username = request.session.get("username")
+    if username:
+        db = await get_session()
+        result = await db.execute(select(User).where(User.username == username))
+        user = result.scalars().first()
+        db_score = Score(score=score, details=detailed_results, user_id=user.id)
+        db.add(db_score)
+        await db.commit()
+        db.refresh(db_score)
+
     response_data = {
         "score": float(score),
         "detailed_results": detailed_results,

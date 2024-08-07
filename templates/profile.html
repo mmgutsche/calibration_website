@@ -5,10 +5,30 @@
 {% block content %}
 <div class="container mt-5">
     <h1 class="display-4">Your Profile</h1>
-    <div>
-        <p>Username: {{ username }}</p>
-        <!-- Additional user-specific information can be added here -->
+    <div class="profile-info">
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        {% if user.first_name %}
+        <p><strong>First Name:</strong> {{ user.first_name }}</p>
+        {% endif %}
+        {% if user.last_name %}
+        <p><strong>Last Name:</strong> {{ user.last_name }}</p>
+        {% endif %}
+        {% if user.date_of_birth %}
+        <p><strong>Date of Birth:</strong> {{ user.date_of_birth.strftime('%Y-%m-%d') }}</p>
+        {% endif %}
+        {% if user.profile_picture %}
+        <p><strong>Profile Picture:</strong></p>
+        <img src="{{ user.profile_picture }}" alt="Profile Picture" class="img-thumbnail" style="max-width: 150px;">
+        {% endif %}
+        {% if user.preferences %}
+        <p><strong>Preferences:</strong> {{ user.preferences | tojson }}</p>
+        {% endif %}
     </div>
     <a class="btn btn-primary" href="/edit-profile" role="button">Edit Profile</a>
+    <button id="delete-profile" class="btn btn-danger mt-4">Delete Profile</button>
 </div>
+{% endblock %}
+{% block scripts %}
+<script src="/static/js/profile.js"></script>
 {% endblock %}

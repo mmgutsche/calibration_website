@@ -5,16 +5,65 @@
 {% block content %}
 <div class="container">
     <h2>Register</h2>
-    <form id="register-form" class="mt-4">
+    <form id="register-form" action="/register" method="post" class="mt-4">
+
+        <!-- Username -->
         <div class="form-group">
             <label for="register-username">Username:</label>
-            <input type="text" id="register-username" name="username" class="form-control" required>
+            <input type="text" id="register-username" name="username" class="form-control" required
+                autocomplete="username" aria-required="true">
         </div>
+
+        <!-- Password -->
         <div class="form-group">
             <label for="register-password">Password:</label>
-            <input type="password" id="register-password" name="password" class="form-control" required>
+            <input type="password" id="register-password" name="password" class="form-control" required pattern=".{8,}"
+                title="Password must be at least 8 characters long" autocomplete="new-password" aria-required="true">
+            <div id="password-strength" class="mt-2"></div>
         </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+            <label for="register-confirm-password">Confirm Password:</label>
+            <input type="password" id="register-confirm-password" name="confirm_password" class="form-control" required
+                aria-required="true">
+        </div>
+        <div class="form-group">
+            <input type="checkbox" id="show-password"> Show Password
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+            <label for="register-email">Email:</label>
+            <input type="email" id="register-email" name="email" class="form-control" required autocomplete="email"
+                aria-required="true">
+        </div>
+
+        <!-- First Name -->
+        <div class="form-group">
+            <label for="register-first-name">First Name:</label>
+            <input type="text" id="register-first-name" name="first_name" class="form-control"
+                autocomplete="given-name">
+        </div>
+
+        <!-- Last Name -->
+        <div class="form-group">
+            <label for="register-last-name">Last Name:</label>
+            <input type="text" id="register-last-name" name="last_name" class="form-control" autocomplete="family-name">
+        </div>
+
+        <!-- Date of Birth -->
+        <div class="form-group">
+            <label for="register-date-of-birth">Date of Birth:</label>
+            <input type="date" id="register-date-of-birth" name="date_of_birth" class="form-control"
+                autocomplete="bday">
+        </div>
+
         <button type="submit" class="btn btn-primary mt-3">Register</button>
     </form>
 </div>
+{% endblock %}
+
+{% block scripts %} 
+<script src="/static/js/register.js"></script>
 {% endblock %}
