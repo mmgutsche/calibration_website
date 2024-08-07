@@ -142,12 +142,20 @@ async def logout(request: Request):
 
 
 @app.get("/profile")
-async def profile(request: Request):
+async def profile(request: Request, db: AsyncSession = Depends(get_session)):
     if not request.session.get("is_authenticated"):
         return RedirectResponse(url="/")
+
+    username = request.session.get("username")
+    result = await db.execute(select(User).where(User.username == username))
+    user = result.scalars().first()
+
+    if not user:
+        return RedirectResponse(url="/")
+
     return templates.TemplateResponse(
         "profile.html",
-        {"request": request, "username": request.session.get("username")},
+        {"request": request, "user": user},
     )
 
 

@@ -3,6 +3,16 @@ from datetime import date, datetime
 from typing import Optional
 
 
+class ScoreOut(BaseModel):
+    id: int
+    score: float
+    date: datetime
+    details: dict
+
+    class Config:
+        orm_mode = True
+
+
 class UserCreate(BaseModel):
     username: str
     password: str
@@ -34,7 +44,7 @@ class UserOut(BaseModel):
     date_of_birth: Optional[date] = None
     profile_picture: Optional[str] = None
     preferences: Optional[dict] = None  # Assuming JSON maps to a Python dict
-    scores: list[Score] = []  # Include this to show user results
+    scores: list[ScoreOut] = []  # Include this to show user results
 
     class Config:
         orm_mode = True
