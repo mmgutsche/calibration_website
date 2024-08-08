@@ -1,9 +1,7 @@
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, ForeignKey, Float, DateTime, String, JSON
 from sqlalchemy.orm import relationship
 import datetime
-
-Base = declarative_base()
+from .database import Base
 
 
 class User(Base):
@@ -23,7 +21,12 @@ class User(Base):
     profile_picture = Column(String, nullable=True)  # URL to profile picture
     preferences = Column(JSON, nullable=True)  # JSON field for user preferences
 
-    scores = relationship("Score", back_populates="user", cascade="all, delete-orphan")
+    scores = relationship(
+        "Score",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="selectin",  # Use selectinload to pre-load related data
+    )
 
 
 class Score(Base):

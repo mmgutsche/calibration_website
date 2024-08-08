@@ -19,6 +19,7 @@ import logging
 from dotenv import load_dotenv
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+import datetime
 
 load_dotenv()
 
@@ -68,6 +69,32 @@ async def register_page(request: Request):
     return response
 
 
+async def check_user_exists(db: AsyncSession, username: str) -> bool:
+    """Check if a user with the given username already exists."""
+    result = await db.execute(select(User).where(User.username == username))
+    return result.scalars().first() is not None
+
+
+async def create_user_in_db(db: AsyncSession, user_create: UserCreate) -> User:
+    """Create a new user in the database."""
+    hashed_password = get_password_hash(user_create.password)
+    assert user_create.date_of_birth is None or isinstance(
+        user_create.date_of_birth, datetime.date
+    )
+    new_user = User(
+        username=user_create.username,
+        email=user_create.email,
+        hashed_password=hashed_password,
+        first_name=user_create.first_name,
+        last_name=user_create.last_name,
+        date_of_birth=user_create.date_of_birth,
+    )
+    db.add(new_user)
+    await db.commit()
+    await db.refresh(new_user)
+    return new_user
+
+
 @app.post("/register", response_model=UserOut)
 async def create_user(
     user: UserCreate,
@@ -78,25 +105,12 @@ async def create_user(
     try:
         # Check if username already exists
         logging.debug(f"Check DB for existing user: {user.username}")
-        existing_user = await db.execute(
-            select(User).where(User.username == user.username)
-        )
-        if existing_user.scalars().first() is not None:
+        if await check_user_exists(db, user.username):
             logging.warning(f"Username already registered: {user.username}")
             raise HTTPException(status_code=409, detail="Username already registered")
 
-        hashed_password = get_password_hash(user.password)
-        new_user = User(
-            username=user.username,
-            email=user.email,
-            hashed_password=hashed_password,
-            first_name=user.first_name,
-            last_name=user.last_name,
-            date_of_birth=user.date_of_birth,
-        )
-        db.add(new_user)
-        await db.commit()
-        await db.refresh(new_user)
+        # Create new user
+        new_user = await create_user_in_db(db, user)
         logging.info(f"User created successfully: {user.username}")
         return new_user
 
