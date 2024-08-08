@@ -13,9 +13,14 @@ setup(
         "aiofiles",
         "jinja2",
         "httpx",
-        "pytest",
-        "pytest-asyncio",
     ],
+    extras_require={
+        "dev": [
+            "pytest",
+            "pytest-asyncio",
+            "pytest-cov",  # Optional: for coverage reports
+        ],
+    },
     entry_points={
         "console_scripts": [
             # If you have any command line scripts
