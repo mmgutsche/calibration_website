@@ -14,7 +14,7 @@ class User(Base):
     first_name = Column(String, nullable=True)  # Full name
     last_name = Column(String, nullable=True)  # Full name
     registration_date = Column(
-        DateTime, default=datetime.datetime.now(datetime.timezone.utc)
+        DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc)
     )
 
     date_of_birth = Column(DateTime, nullable=True)  # Date of birth
