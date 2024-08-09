@@ -54,7 +54,7 @@ with open("questions.json", "r") as f:
 app.add_middleware(
     SessionMiddleware,
     secret_key=os.getenv("SECRET_KEY", "your_secret_key"),
-    max_age=3600,  # Session will expire after 1 hour
+    max_age=86400,  # Session will expire after 1 hour
 )
 
 
@@ -272,9 +272,10 @@ def get_questions():
 
 @app.get("/questionnaire")
 async def questionnaire(request: Request):
+    is_authenticated = request.session.get("is_authenticated", False)
     return templates.TemplateResponse(
         "questionnaire.html",
-        {"request": request},
+        {"request": request, "is_authenticated": is_authenticated},
     )
 
 
