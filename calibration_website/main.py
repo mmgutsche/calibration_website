@@ -9,7 +9,7 @@ from calibration_website.auth import (
 )
 from calibration_website.database import get_session
 from calibration_website.models import User, Score
-from calibration_website.schemas import UserCreate, UserOut
+from calibration_website.schemas import UserCreate, UserOut, ScoreOut
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete
 import os
@@ -201,6 +201,26 @@ async def delete_profile(
     return JSONResponse(content={"detail": "User profile deleted successfully"})
 
 
+@app.get("/api/score-history", response_model=list[ScoreOut])
+async def get_score_history(request: Request, db: AsyncSession = Depends(get_session)):
+    if not request.session.get("is_authenticated"):
+        raise HTTPException(status_code=403, detail="Not authenticated")
+
+    username = request.session.get("username")
+    result = await db.execute(select(User).where(User.username == username))
+    user = result.scalars().first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    scores_result = await db.execute(
+        select(Score).where(Score.user_id == user.id).order_by(Score.date.desc())
+    )
+    scores = scores_result.scalars().all()
+
+    return scores
+
+
 @app.get("/check-auth")
 async def check_auth(request: Request):
     is_authenticated = request.session.get("is_authenticated", False)
@@ -267,7 +287,7 @@ async def how_to_improve(request: Request, user=Depends(get_user)):
 
 
 @app.post("/submit")
-async def submit(request: Request):
+async def submit(request: Request, db: AsyncSession = Depends(get_session)):
     data = await request.json()
 
     error_response = validate_input_data(data)
@@ -282,13 +302,12 @@ async def submit(request: Request):
     # Save results to database if user is authenticated
     username = request.session.get("username")
     if username:
-        db = await get_session()
         result = await db.execute(select(User).where(User.username == username))
         user = result.scalars().first()
         db_score = Score(score=score, details=detailed_results, user_id=user.id)
         db.add(db_score)
         await db.commit()
-        db.refresh(db_score)
+        await db.refresh(db_score)
 
     response_data = {
         "score": float(score),

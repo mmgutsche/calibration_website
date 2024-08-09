@@ -26,14 +26,40 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="col-md-2">
                         <input type="text" name="upper_${index}" class="form-control number-input" placeholder="e.g., 3.2e9">
                     </div>
-                    <div class="col-md-4 result-container d-none"> <!-- Placeholder for results -->
+                    <div class="col-md-4 result-container d-none">
                         <!-- Result will be dynamically inserted here -->
+                    </div>
+                    <div class="col-md-12 mt-2">
+                        <button type="button" class="btn btn-link toggle-notes">Add Notes</button>
+                        <textarea name="note_${index}" class="form-control note-input d-none" placeholder="Add your notes here (this will not be submitted)" rows="1"></textarea>
                     </div>
                 </div>
             `;
                 container.innerHTML += questionHtml;
             });
 
+            // Add event listener for toggling the note field
+            document.querySelectorAll('.toggle-notes').forEach(button => {
+                button.addEventListener('click', function () {
+                    const textarea = this.nextElementSibling;
+                    if (textarea.classList.contains('d-none')) {
+                        textarea.classList.remove('d-none');
+                        this.textContent = 'Hide Notes';
+                        textarea.focus(); // Optional: focus the textarea when expanded
+                    } else {
+                        textarea.classList.add('d-none');
+                        this.textContent = 'Add Notes';
+                    }
+                });
+            });
+
+            // Add event listener for expanding textareas
+            document.querySelectorAll('.note-input').forEach(textarea => {
+                textarea.addEventListener('input', function () {
+                    this.style.height = 'auto'; // Reset the height
+                    this.style.height = this.scrollHeight + 'px'; // Set the height to match the content
+                });
+            });
 
             document.querySelectorAll('.number-input').forEach(input => {
                 input.addEventListener('input', function () {
@@ -65,8 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let allFieldsFilled = true;
         let answers = {};
 
-        // Check if all fields are filled
+        // Check if all fields are filled (excluding notes)
         for (let [key, value] of formData.entries()) {
+            if (key.startsWith('note_')) continue; // Skip notes
             if (value === "") {
                 allFieldsFilled = false;
                 break;
@@ -89,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Hide error banner if previously shown
             hideError();
 
-            // Submit the form data
+            // Submit the form data (excluding notes)
             console.log('Submitting answers:', answers); // Debugging statement
             fetch('/submit', {
                 method: 'POST',
@@ -126,6 +153,11 @@ document.addEventListener('DOMContentLoaded', () => {
             input.disabled = true;
         });
 
+        // Disable all note fields
+        document.querySelectorAll('#calibrationForm .note-input').forEach(input => {
+            input.disabled = true;
+        });
+
         // Hide the submit button
         document.querySelector('#calibrationForm button[type="submit"]').style.display = 'none';
 
@@ -150,10 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resultContainer.innerHTML = `<span class="${colorClass}">${item.correct_answer}</span>`;
             resultContainer.classList.remove('d-none');
         });
-
     }
-
-
 
     function displayError(message) {
         console.error(message); // Debugging statement
@@ -168,6 +197,4 @@ document.addEventListener('DOMContentLoaded', () => {
         errorBanner.classList.add('d-none');
         errorBanner.innerText = '';
     }
-
-
 });

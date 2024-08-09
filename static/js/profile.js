@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Other event listeners...
-
     // Add event listener for deleting profile
     document.getElementById('delete-profile')?.addEventListener('click', async function (event) {
         event.preventDefault();
@@ -18,19 +16,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
-                displayMessage('Profile deleted successfully!');
+                alert('Profile deleted successfully!');
                 setTimeout(() => {
                     window.location.href = "/"; // Redirect to home page on success
                 }, 2000); // Delay to show the message
             } else {
                 const error = await response.json();
-                displayError(`Error: ${error.detail}`);
+                alert(`Error: ${error.detail}`);
             }
         } catch (error) {
             console.error('Error during fetch:', error);
-            displayError('An unexpected error occurred.');
+            alert('An unexpected error occurred.');
         }
     });
-
-
 });

@@ -32,12 +32,33 @@
             </div>
         </div>
     </div>
+
+    <!-- New section for questionnaire result history -->
+    <div class="mt-4">
+        <h2>Questionnaire Result History</h2>
+        <div id="score-history" class="mt-3">
+            {% if user.scores %}
+            <ul class="list-group">
+                {% for score in user.scores %}
+                <li class="list-group-item">
+                    <strong>Date:</strong> {{ score.date.strftime('%Y-%m-%d %H:%M:%S') }} |
+                    <strong>Score:</strong> {{ score.score }}%
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No scores available.</p>
+            {% endif %}
+        </div>
+    </div>
+
     <div class="mt-4 d-flex justify-content-between">
         <a class="btn btn-primary" href="/edit-profile" role="button">Edit Profile</a>
         <button id="delete-profile" class="btn btn-danger">Delete Profile</button>
     </div>
 </div>
 {% endblock %}
+
 {% block scripts %}
 <script src="/static/js/profile.js"></script>
 {% endblock %}
