@@ -43,3 +43,21 @@ function checkAuthOnLoad() {
             console.error('Error checking authentication status:', error);
         });
 }
+
+function displayMessage(message) {
+    const messageDiv = document.getElementById('message');
+    messageDiv.innerText = message;
+    messageDiv.classList.remove('d-none');
+    setTimeout(() => {
+        messageDiv.classList.add('d-none');
+    }, 5000); // Hide the message after 5 seconds
+}
+
+function displayError(message) {
+    const errorBanner = document.getElementById('errorBanner');
+    errorBanner.innerText = message;
+    errorBanner.classList.remove('d-none');
+    setTimeout(() => {
+        errorBanner.classList.add('d-none');
+    }, 5000); // Hide the error after 5 seconds
+}

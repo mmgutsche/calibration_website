@@ -193,13 +193,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function displayError(message) {
-        console.error(message); // Debugging statement
-        const errorBanner = document.getElementById('errorBanner');
-        errorBanner.innerText = message;
-        errorBanner.classList.remove('d-none');
-        setTimeout(() => $('#errorBanner').fadeOut(), 5000); // Auto-hide error after 5 seconds
-    }
 
     function hideError() {
         const errorBanner = document.getElementById('errorBanner');

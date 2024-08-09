@@ -5,7 +5,8 @@
 {% block content %}
 <div class="container">
     <h2>Login</h2>
-    <form id="login-form" class="mt-4">
+    <form id="login-form" method="POST" action="/token" class="mt-4">
+        <!-- Form fields -->
         <input type="hidden" id="redirect-url" name="redirect_url" value="{{ request.query_params.redirect or '/' }}">
         <div class="form-group">
             <label for="login-username">Username:</label>
@@ -17,8 +18,9 @@
         </div>
         <button type="submit" class="btn btn-primary mt-3">Login</button>
     </form>
+
 </div>
 {% endblock %}
-{% block scripts %}
+<!-- {% block scripts %}
 <script src="/static/js/login.js"></script>
-{% endblock %}
+{% endblock %} -->

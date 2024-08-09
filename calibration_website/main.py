@@ -31,6 +31,7 @@ DEBUG = os.getenv("DEBUG", "False").lower() in [
 
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
+    logging.getLogger("aiosqlite").setLevel(logging.WARNING)
 
 
 app = FastAPI()
@@ -140,13 +141,10 @@ async def login_for_access_token(
     access_token = create_access_token(data={"sub": user.username})
     request.session["is_authenticated"] = True
     request.session["username"] = user.username
-    return JSONResponse(
-        {
-            "access_token": access_token,
-            "token_type": "bearer",
-            "redirect_url": redirect_url,
-        }
-    )
+    # this line is maybe not necessary
+    request.session["access_token"] = access_token  # Store the token in the session
+    # Perform the redirection after setting the session
+    return RedirectResponse(url=redirect_url, status_code=status.HTTP_303_SEE_OTHER)
 
 
 @app.get("/logout")
