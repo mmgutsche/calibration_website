@@ -23,3 +23,13 @@
     font-size: 1rem;
     /* Readable text size */
 }
+
+.navbar-text {
+    margin-left: auto;
+    font-weight: bold;
+    color: #555;
+}
+
+#login-prompt .btn {
+    margin-left: 10px;
+}

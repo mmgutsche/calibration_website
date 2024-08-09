@@ -1,47 +1,30 @@
 function updateNavigation(isAuthenticated, username = "") {
     console.log("Updating navigation, isAuthenticated:", isAuthenticated, "username:", username);
-    const loginLink = document.getElementById('login-link');
-    const registerLink = document.getElementById('register-link');
     const profileLink = document.getElementById('profile-link');
-    const profileLinkText = document.getElementById('profile-link-text'); // Add this line
+    const profileLinkText = document.getElementById('profile-link-text');
     const logoutLink = document.getElementById('logout-link');
-    const logoutLinkText = document.getElementById('logout-link-text'); // Add this line
+    const logoutLinkText = document.getElementById('logout-link-text');
+    const userGreeting = document.getElementById('user-greeting');
+    const usernameDisplay = document.getElementById('username-display');
+    const loginPrompt = document.getElementById('login-prompt');
 
     if (isAuthenticated) {
-        loginLink.classList.add('d-none');
-        registerLink.classList.add('d-none');
+        // Hide login prompt and show user-related links and greeting
+        loginPrompt.classList.add('d-none');
         profileLink.classList.remove('d-none');
         logoutLink.classList.remove('d-none');
-        profileLinkText.textContent = `Profile (${username})`; // Update profile link text
-        logoutLinkText.textContent = `Log out`; // Update logout link text
+        userGreeting.classList.remove('d-none');
+        profileLinkText.textContent = `Profile (${username})`;
+        logoutLinkText.textContent = `Log out`;
+        usernameDisplay.textContent = username;
     } else {
-        loginLink.classList.remove('d-none');
-        registerLink.classList.remove('d-none');
+        // Show login prompt and hide user-related links and greeting
+        loginPrompt.classList.remove('d-none');
         profileLink.classList.add('d-none');
         logoutLink.classList.add('d-none');
-        profileLinkText.textContent = "Profile"; // Reset profile link text
-        logoutLinkText.textContent = "Log out"; // Reset logout link text
+        userGreeting.classList.add('d-none');
+        usernameDisplay.textContent = "";
     }
-}
-
-function displayMessage(message) {
-    const messageDiv = document.getElementById('message');
-    messageDiv.innerText = message;
-    messageDiv.classList.remove('d-none');
-    setTimeout(() => {
-        $('#message').fadeOut();
-        messageDiv.classList.add('d-none');
-    }, 5000); // Auto-hide message after 5 seconds
-}
-
-function displayError(message) {
-    const errorBanner = document.getElementById('errorBanner');
-    errorBanner.innerText = message;
-    errorBanner.classList.remove('d-none');
-    setTimeout(() => {
-        $('#errorBanner').fadeOut();
-        errorBanner.classList.add('d-none');
-    }, 5000); // Auto-hide error after 5 seconds
 }
 
 document.addEventListener('DOMContentLoaded', () => {
