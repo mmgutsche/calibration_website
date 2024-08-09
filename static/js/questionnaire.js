@@ -178,8 +178,17 @@ document.addEventListener('DOMContentLoaded', () => {
             // Determine the color based on whether the answer was correct
             const colorClass = item.correct ? 'text-success' : 'text-danger';
 
+
+            // Format the correct answer and user's bounds
+            const formattedAnswer = formatNumber(item.correct_answer);
+            const formattedLowerBound = formatNumber(item.lower_bound);
+            const formattedUpperBound = formatNumber(item.upper_bound);
+
+            // Update the form fields with the formatted bounds
+            lowerBoundInput.value = formattedLowerBound;
+            upperBoundInput.value = formattedUpperBound;
             // Insert the result text with appropriate color
-            resultContainer.innerHTML = `<span class="${colorClass}">${item.correct_answer}</span>`;
+            resultContainer.innerHTML = `<span class="${colorClass}">${formattedAnswer}</span>`;
             resultContainer.classList.remove('d-none');
         });
     }
@@ -198,3 +207,16 @@ document.addEventListener('DOMContentLoaded', () => {
         errorBanner.innerText = '';
     }
 });
+
+
+function formatNumber(num) {
+    const absNum = Math.abs(num);
+
+    // Use Intl.NumberFormat for most formatting
+    const formatter = new Intl.NumberFormat(undefined, {
+        notation: absNum < 1e-2 || absNum >= 1e6 ? 'scientific' : 'standard',
+        maximumFractionDigits: 2,
+    });
+
+    return formatter.format(num);
+}
