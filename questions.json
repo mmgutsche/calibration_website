@@ -1,43 +1,43 @@
 [
     {
-        "question": "What is the population of Canada in 2023 (in millions)?",
-        "answer": 39.4
+        "question": "Approximately how many people live in Canada as of 2023?",
+        "answer": 39400000
     },
     {
-        "question": "What is the distance in kilometers between New York City and Los Angeles?",
+        "question": "What is the distance between New York City and Los Angeles in kilometers?",
         "answer": 3940
     },
     {
-        "question": "In what year was Leonardo da Vinci born?",
+        "question": "In which year was Leonardo da Vinci born?",
         "answer": 1452
     },
     {
-        "question": "How many smartphones were sold worldwide in 2022 (in millions)?",
-        "answer": 1450
+        "question": "How many smartphones were sold globally in 2022?",
+        "answer": 1450000000
     },
     {
         "question": "What is the average depth of the Arctic Ocean in meters?",
         "answer": 1205
     },
     {
-        "question": "What was the GDP of Brazil in 2022 (in billions of USD)?",
-        "answer": 1676
+        "question": "What was Brazil's GDP in 2022 in USD?",
+        "answer": 1676000000000
     },
     {
-        "question": "How many Harry Potter books have been sold worldwide as of 2023 (in millions)?",
-        "answer": 600
+        "question": "How many Harry Potter books were sold worldwide by 2023?",
+        "answer": 600000000
     },
     {
-        "question": "What is the total cost of the International Space Station project (in billions of USD)?",
-        "answer": 150
+        "question": "What is the estimated total cost of the International Space Station project in USD?",
+        "answer": 150000000000
     },
     {
-        "question": "What is the world record time for the men's 100-meter sprint as of 2023 (in seconds)?",
+        "question": "What is the world record time for the men's 100-meter sprint as of 2023 in seconds?",
         "answer": 9.58
     },
     {
-        "question": "What would be the auction price for Vincent van Gogh's 'Starry Night' if sold in 2023 (in millions of USD)?",
-        "answer": 200
+        "question": "What would be the auction price for Vincent van Gogh's 'Starry Night' if sold in 2023 in USD?",
+        "answer": 200000000
     },
     {
         "question": "What is the height of Mount Everest in meters?",
@@ -48,19 +48,19 @@
         "answer": 7050
     },
     {
-        "question": "What is the population of Tokyo in 2023 (in millions)?",
-        "answer": 37.4
+        "question": "Approximately how many people live in Tokyo as of 2023?",
+        "answer": 37400000
     },
     {
-        "question": "What is the gross domestic product (GDP) of India in 2022 (in trillions of USD)?",
-        "answer": 3.5
+        "question": "What was India's GDP in 2022 in USD?",
+        "answer": 3500000000000
     },
     {
-        "question": "How many active users does Facebook have worldwide in 2023 (in billions)?",
-        "answer": 2.9
+        "question": "How many people use Facebook globally in 2023?",
+        "answer": 2900000000
     },
     {
-        "question": "What is the life expectancy in the United States as of 2023 (in years)?",
+        "question": "What is the life expectancy in the United States as of 2023 in years?",
         "answer": 79
     },
     {
@@ -68,11 +68,11 @@
         "answer": 9100000
     },
     {
-        "question": "How much does the Hubble Space Telescope weigh (in kilograms)?",
+        "question": "How much does the Hubble Space Telescope weigh in kilograms?",
         "answer": 11110
     },
     {
-        "question": "What is the annual water discharge of the Nile River at its mouth (in cubic kilometers)?",
+        "question": "What is the annual water discharge of the Nile River at its mouth in cubic kilometers?",
         "answer": 84
     },
     {
@@ -84,15 +84,15 @@
         "answer": 4
     },
     {
-        "question": "What is the annual production of wheat worldwide in 2022 (in million metric tons)?",
-        "answer": 780
+        "question": "What was the annual production of wheat worldwide in 2022 in metric tons?",
+        "answer": 780000000
     },
     {
         "question": "How many species of birds are known to exist worldwide?",
         "answer": 10500
     },
     {
-        "question": "What is the average temperature on Mars (in degrees Celsius)?",
+        "question": "What is the average temperature on Mars in degrees Celsius?",
         "answer": -63
     },
     {
@@ -104,16 +104,16 @@
         "answer": 10994
     },
     {
-        "question": "How many films have been produced by Bollywood in 2022?",
+        "question": "How many films were produced by Bollywood in 2022?",
         "answer": 1800
     },
     {
-        "question": "What is the average internet speed globally in 2023 (in Mbps)?",
+        "question": "What was the average internet speed globally in 2023 in Mbps?",
         "answer": 96
     },
     {
-        "question": "What is the population of the world in 2023 (in billions)?",
-        "answer": 7.9
+        "question": "What is the total number of people in the world as of 2023?",
+        "answer": 7900000000
     },
     {
         "question": "How many paintings did Pablo Picasso produce in his lifetime?",
@@ -132,12 +132,12 @@
         "answer": 21196
     },
     {
-        "question": "How many people are employed in the technology sector in the United States as of 2023 (in millions)?",
-        "answer": 12.1
+        "question": "How many people were employed in the technology sector in the United States as of 2023?",
+        "answer": 12100000
     },
     {
-        "question": "What is the annual coffee consumption worldwide in 2022 (in million metric tons)?",
-        "answer": 166
+        "question": "What was the annual coffee consumption worldwide in 2022 in metric tons?",
+        "answer": 166000000
     },
     {
         "question": "What is the volume of Lake Superior in cubic kilometers?",
@@ -148,7 +148,7 @@
         "answer": 1300
     },
     {
-        "question": "What is the number of species of mammals currently known to exist?",
+        "question": "How many species of mammals are currently known to exist?",
         "answer": 6500
     },
     {
@@ -160,15 +160,15 @@
         "answer": 828
     },
     {
-        "question": "What is the total energy consumption of the United States in 2022 (in quadrillion BTU)?",
-        "answer": 100.2
+        "question": "What was the total energy consumption of the United States in 2022 in BTU?",
+        "answer": 100200000000000
     },
     {
         "question": "How many official languages are there in the United Nations?",
         "answer": 6
     },
     {
-        "question": "What is the depth of Crater Lake in Oregon, USA in meters?",
+        "question": "What is the depth of Crater Lake in Oregon, USA, in meters?",
         "answer": 594
     },
     {
@@ -192,8 +192,8 @@
         "answer": 80
     },
     {
-        "question": "What is the population of New York City in 2023 (in millions)?",
-        "answer": 8.4
+        "question": "Approximately how many people live in New York City as of 2023?",
+        "answer": 8400000
     },
     {
         "question": "How many keys are there on a standard piano?",
