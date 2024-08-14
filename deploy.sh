@@ -13,12 +13,27 @@ echo "Environment variables being used:"
 GIT_REPO="git@github.com:mmgutsche/calibration_website.git"
 TARGET_DIR="/var/www/calibration_website"
 LOG_FILE="/var/www/calibration_website/deployment.log"
+ENV_FILE="${TARGET_DIR}/.env"
 
 # Check the directory and activate the virtual environment
 echo "Changing directory to \$TARGET_DIR and activating the virtual environment..."
 cd ${TARGET_DIR}
 source ${TARGET_DIR}/venv/bin/activate
 echo "Virtual environment activated."
+
+# Check for .env file and create it if it doesn't exist
+if [ ! -f "\$ENV_FILE" ]; then
+    echo ".env file not found. Creating .env file..."
+    cat <<EOT >> \${ENV_FILE}
+# Environment variables for the Calibration Website
+SECRET_KEY=$(openssl rand -hex 32)
+DATABASE_URL=sqlite:///./app.db  # Adjust this if using a different database
+DEBUG=False  # Set to False in production
+EOT
+    echo ".env file created with default settings."
+else
+    echo ".env file already exists. Skipping creation."
+fi
 
 # Git operations
 echo "Pulling the latest changes from the Git repository..."
@@ -32,7 +47,7 @@ echo "Dependencies installed."
 
 # Optionally, perform other updates like database migrations
 # echo "Performing database migrations..."
-# python manage.py migrate
+# alembic upgrade head
 
 # Systemd service restart
 echo "Restarting the systemd service..."
