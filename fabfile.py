@@ -12,6 +12,15 @@ LOG_FILE = "/var/www/calibration_website/deployment.log"
 ENV_FILE = f"{TARGET_DIR}/.env"
 VENV_DIR = f"{TARGET_DIR}/venv"
 
+"""
+Quick usage guide:
+- Run `fab deploy` to deploy the latest changes from the Git repository.
+- Run `fab restart-service` to restart the systemd service.
+- Run `fab check-status` to check the status of the systemd service.
+- Run `fab clean-venv` to clean and recreate the virtual environment.
+
+"""
+
 
 def get_sudo_responder(sudo_password):
     return Responder(

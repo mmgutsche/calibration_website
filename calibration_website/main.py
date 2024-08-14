@@ -34,7 +34,6 @@ if DEBUG:
     logging.getLogger("aiosqlite").setLevel(logging.WARNING)
     logging.warning("Running in DEBUG mode")
 
-logging.info(f"Using database: {DATABASE_URL}")
 app = FastAPI()
 
 
