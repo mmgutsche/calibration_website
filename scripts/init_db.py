@@ -3,6 +3,11 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from calibration_website.models import Base  # Ensure correct import of your models
 import os
 
+# load .env file
+from dotenv import load_dotenv
+
+load_dotenv()
+
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./production.db")
 
 

@@ -56,10 +56,10 @@ def deploy(c):
             print(".env file not found. Creating .env file...")
             secret_key = conn.run("openssl rand -hex 32", hide=True).stdout.strip()
             env_content = f"""
-            # Environment variables for the Calibration Website
-            SECRET_KEY={secret_key}
-            DATABASE_URL=sqlite:///./app.db  # Adjust this if using a different database
-            DEBUG=False  # Set to False in production
+# Environment variables for the Calibration Website
+SECRET_KEY={secret_key}
+DATABASE_URL=sqlite+aiosqlite:///./app.db  # Adjust this if using a different database
+DEBUG=False  # Set to False in production
             """
             conn.run(f"echo '{env_content}' > {ENV_FILE}")
             print(".env file created with default settings.")
@@ -68,8 +68,18 @@ def deploy(c):
 
         # Dependency installation using the virtual environment's pip
         print("Installing dependencies from requirements.txt...")
-        conn.run(f"{TARGET_DIR}/venv/bin/pip install -r requirements.txt")
+        conn.run(f"{TARGET_DIR}/venv/bin/pip install --upgrade .")
         print("Dependencies installed.")
+
+        # Initialize the database
+        print("Initializing the database...")
+        conn.run(f"{TARGET_DIR}/venv/bin/python scripts/init_db.py")
+        print("Database initialized.")
+
+        # Apply Alembic migrations
+        print("Applying database migrations...")
+        conn.run(f"{TARGET_DIR}/venv/bin/alembic upgrade head")
+        print("Database migrations applied.")
 
     # Logging deployment details
     print("Logging deployment details...")
@@ -121,25 +131,39 @@ def restart_service(c):
     print("Service restart script executed successfully.")
 
 
+@task
+def remove_env(c):
+    """Task to remove the .env file."""
+    conn = Connection(host=SERVER_IP, user=SERVER_USER)
+    remove_env_file(conn)
+
+
+def remove_env_file(conn):
+    """Removes the .env file if it exists."""
+    if conn.run(f"test -f {ENV_FILE}", warn=True).ok:
+        conn.run(f"rm {ENV_FILE}")
+        print(f".env file at {ENV_FILE} has been removed.")
+        log_to_file(conn, ".env file removed.")
+    else:
+        print(".env file does not exist, nothing to remove.")
+        log_to_file(conn, ".env file does not exist, nothing to remove.")
+
+
 def fetch_service_logs(conn, sudo_responder):
-    print("Fetching service logs...")
     logs = conn.sudo(
         "journalctl -u calibration_website.service --no-pager -n 50",
         hide=True,
         watchers=[sudo_responder],
     ).stdout.strip()
-    print(f"Service Logs:\n{logs}")
     return logs
 
 
 def fetch_service_status_details(conn, sudo_responder):
-    print("Fetching detailed service status...")
     status_details = conn.sudo(
         "systemctl status calibration_website.service --no-pager",
         hide=True,
         watchers=[sudo_responder],
     ).stdout.strip()
-    print(f"Service Status Details:\n{status_details}")
     return status_details
 
 
@@ -159,6 +183,16 @@ def clean_venv(c):
     print("New virtual environment created.")
 
     log_to_file(conn, "Virtual environment cleaned and recreated.")
+
+
+def is_error_in_logs(logs) -> bool:
+    print("Checking service logs for errors...")
+
+    if "ERROR" in logs:
+        print("Detected errors in service logs.")
+        return True
+    print("No critical errors detected in service logs.")
+    return False
 
 
 @task
@@ -191,14 +225,17 @@ def check_status(c):
             log_to_file(conn, "Service has failed.")
 
             # Fetch logs and detailed status
-            fetch_service_logs(conn, sudo_responder)
-            fetch_service_status_details(conn, sudo_responder)
+            logs_journal = fetch_service_logs(conn, sudo_responder)
+            logs_systemd = fetch_service_status_details(conn, sudo_responder)
+            raise ValueError(
+                f"Service failed to start. Journal logs: {logs_journal}\nSystemd status: {logs_systemd}"
+            )
         else:
-            print(f"Unexpected service status: {status_result}")
             log_to_file(conn, f"Unexpected service status: {status_result}")
+            raise ValueError(f"Unexpected service status: \n{status_result}")
 
-    except Exception as e:
-        print(f"Error checking service status: {e}")
+    except Exception:
         log_to_file(conn, "Error checking service status.")
+        raise
 
     print("Status check completed.")

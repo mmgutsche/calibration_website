@@ -25,13 +25,19 @@
                     <a href="/register" class="btn btn-secondary btn-sm">Register</a>
                 </span>
             </div>
-    
-            <!-- Hamburger Menu -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-    
+
+            <!-- Greeting or Login Prompt for larger screens -->
+            <div class="d-none d-lg-block navbar-text">
+                <span class="d-none" id="user-greeting-lg">
+                    Welcome, <span id="username-display-lg"></span>!
+                </span>
+                <span class="d-none" id="login-prompt-lg">
+                    <a href="/login" class="btn btn-primary btn-sm">Login</a>
+                    <a href="/register" class="btn btn-secondary btn-sm">Register</a>
+                </span>
+            </div>
+
+            
             <!-- Navbar Collapse -->
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
@@ -46,17 +52,16 @@
                     </li>
                 </ul>
             </div>
+
+            <!-- Hamburger Menu -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
     
-            <!-- Greeting or Login Prompt for larger screens -->
-            <div class="d-none d-lg-block navbar-text">
-                <span class="d-none" id="user-greeting-lg">
-                    Welcome, <span id="username-display-lg"></span>!
-                </span>
-                <span class="d-none" id="login-prompt-lg">
-                    <a href="/login" class="btn btn-primary btn-sm">Login</a>
-                    <a href="/register" class="btn btn-secondary btn-sm">Register</a>
-                </span>
-            </div>
+           
+    
+          
         </div>
     </nav>
 

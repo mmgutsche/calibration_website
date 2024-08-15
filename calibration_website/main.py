@@ -7,7 +7,7 @@ from calibration_website.auth import (
     authenticate_user,
     create_access_token,
 )
-from calibration_website.database import get_session, DATABASE_URL
+from calibration_website.database import get_session
 from calibration_website.models import User, Score
 from calibration_website.schemas import UserCreate, UserOut, ScoreOut
 from sqlalchemy.ext.asyncio import AsyncSession

@@ -1,5 +1,7 @@
 function updateNavigation(isAuthenticated, username = "") {
     console.log("Updating navigation, isAuthenticated:", isAuthenticated, "username:", username);
+
+    // Mobile elements
     const profileLink = document.getElementById('profile-link');
     const profileLinkText = document.getElementById('profile-link-text');
     const logoutLink = document.getElementById('logout-link');
@@ -8,24 +10,42 @@ function updateNavigation(isAuthenticated, username = "") {
     const usernameDisplay = document.getElementById('username-display');
     const loginPrompt = document.getElementById('login-prompt');
 
+    // Desktop elements
+    const userGreetingLg = document.getElementById('user-greeting-lg');
+    const usernameDisplayLg = document.getElementById('username-display-lg');
+    const loginPromptLg = document.getElementById('login-prompt-lg');
+
     if (isAuthenticated) {
-        // Hide login prompt and show user-related links and greeting
+        // Hide login prompt and show user-related links and greeting (both views)
         loginPrompt.classList.add('d-none');
+        loginPromptLg.classList.add('d-none');
+
         profileLink.classList.remove('d-none');
         logoutLink.classList.remove('d-none');
         userGreeting.classList.remove('d-none');
+
+        userGreetingLg.classList.remove('d-none');
+
         profileLinkText.textContent = `Profile (${username})`;
         logoutLinkText.textContent = `Log out`;
         usernameDisplay.textContent = username;
+        usernameDisplayLg.textContent = username;
     } else {
-        // Show login prompt and hide user-related links and greeting
+        // Show login prompt and hide user-related links and greeting (both views)
         loginPrompt.classList.remove('d-none');
+        loginPromptLg.classList.remove('d-none');
+
         profileLink.classList.add('d-none');
         logoutLink.classList.add('d-none');
         userGreeting.classList.add('d-none');
+
+        userGreetingLg.classList.add('d-none');
+
         usernameDisplay.textContent = "";
+        usernameDisplayLg.textContent = "";
     }
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
     checkAuthOnLoad();
