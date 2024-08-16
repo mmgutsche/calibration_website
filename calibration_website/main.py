@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, Depends, HTTPException, status, Form
 from fastapi.responses import JSONResponse, RedirectResponse, FileResponse
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from calibration_website.auth import (
     get_password_hash,
@@ -50,6 +51,16 @@ templates = Jinja2Templates(directory="templates")
 with open("questions.json", "r") as f:
     questions = json.load(f)
 # Add SessionMiddleware
+
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://calibration.marcelgutsche.de"],  # Adjust as needed
+    allow_credentials=True,
+    allow_methods=["*"],  # You can specify allowed methods here
+    allow_headers=["*"],  # You can specify allowed headers here
+)
 
 
 app.add_middleware(
