@@ -184,9 +184,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const formattedLowerBound = formatNumber(item.lower_bound);
             const formattedUpperBound = formatNumber(item.upper_bound);
 
-            // Update the form fields with the formatted bounds
-            lowerBoundInput.value = formattedLowerBound;
-            upperBoundInput.value = formattedUpperBound;
+            // Select the input fields corresponding to the current question
+            const lowerBoundInput = document.querySelector(`input[name="lower_${index}"]`);
+            const upperBoundInput = document.querySelector(`input[name="upper_${index}"]`);
+
+            // Update the form fields with the formatted bounds if the inputs are found
+            if (lowerBoundInput && upperBoundInput) {
+                lowerBoundInput.value = formattedLowerBound;
+                upperBoundInput.value = formattedUpperBound;
+            } else {
+                console.error('Input fields not found for index:', index);
+            }
             // Insert the result text with appropriate color
             resultContainer.innerHTML = `<span class="${colorClass}">${formattedAnswer}</span>`;
             resultContainer.classList.remove('d-none');
