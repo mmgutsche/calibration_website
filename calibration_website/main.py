@@ -253,7 +253,7 @@ async def get_user(request: Request, redirect: bool = True) -> dict:
     return {"username": username, "user_is_authenticated": is_authenticated}
 
 
-@app.get("/")
+@app.get("/", methods=["GET", "HEAD"])
 async def main(request: Request):
     return templates.TemplateResponse(
         "index.html",
