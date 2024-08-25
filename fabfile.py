@@ -2,6 +2,7 @@ from fabric import Connection, task
 from invoke import Responder
 from datetime import datetime
 import getpass
+import requests
 
 # Variables
 SERVER_USER = "mgutsche"
@@ -12,14 +13,8 @@ LOG_FILE = "/var/www/calibration_website/deployment.log"
 ENV_FILE = f"{TARGET_DIR}/.env"
 VENV_DIR = f"{TARGET_DIR}/venv"
 
-"""
-Quick usage guide:
-- Run `fab deploy` to deploy the latest changes from the Git repository.
-- Run `fab restart-service` to restart the systemd service.
-- Run `fab check-status` to check the status of the systemd service.
-- Run `fab clean-venv` to clean and recreate the virtual environment.
-
-"""
+CALIBRATION_URL = "https://calibration.marcelgutsche.de"
+ANALYTICS_URL = "https://analytics.marcelgutsche.de"
 
 
 def get_sudo_responder(sudo_password):
@@ -102,7 +97,6 @@ def restart_service(c):
     # Restarting the systemd service
     print("Restarting the systemd service...")
     try:
-
         conn.sudo(
             "sudo systemctl daemon-reload",
             pty=True,
@@ -195,6 +189,37 @@ def is_error_in_logs(logs) -> bool:
     return False
 
 
+def check_service_url(url):
+    """Check the availability of a given service URL from the local machine."""
+    print(f"Checking website accessibility for {url} using requests...")
+    try:
+        response = requests.head(url)
+        if response.status_code == 200:
+            print(f"Website {url} is accessible.")
+        else:
+            print(
+                f"Website {url} is not accessible. HTTP response code: {response.status_code}"
+            )
+            raise ValueError(
+                f"Website {url} is not accessible. HTTP response code: {response.status_code}"
+            )
+    except requests.RequestException as e:
+        print(f"Failed to connect to {url}: {e}")
+        raise ValueError(f"Failed to connect to {url}: {e}")
+
+
+@task
+def check_calibration_status(c):
+    """Task to check the status of the Calibration service."""
+    check_service_url(CALIBRATION_URL)
+
+
+@task
+def check_analytics_status(c):
+    """Task to check the status of the Analytics service."""
+    check_service_url(ANALYTICS_URL)
+
+
 @task
 def check_status(c):
     # SSH connection
@@ -233,6 +258,10 @@ def check_status(c):
         else:
             log_to_file(conn, f"Unexpected service status: {status_result}")
             raise ValueError(f"Unexpected service status: \n{status_result}")
+
+        # Additional Checks
+        check_calibration_status(c)
+        check_analytics_status(c)
 
     except Exception:
         log_to_file(conn, "Error checking service status.")
