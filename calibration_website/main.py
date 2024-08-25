@@ -253,12 +253,15 @@ async def get_user(request: Request, redirect: bool = True) -> dict:
     return {"username": username, "user_is_authenticated": is_authenticated}
 
 
-@app.get("/", methods=["GET", "HEAD"])
-async def main(request: Request):
-    return templates.TemplateResponse(
-        "index.html",
-        {"request": request},
-    )
+@app.get("/")
+async def main_get(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+
+@app.head("/")
+async def main_head(request: Request):
+    # Return an empty response for HEAD requests
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.get("/favicon.ico")
