@@ -7,7 +7,6 @@ This project is a web application designed to help users improve their calibrati
 - Presents users with 10 random trivia questions from a pool of 200 questions.
 - Users input their estimated lower and upper bounds for each question.
 - Displays the correct answers after submission and calculates a calibration score.
-- Uses `cleave.js` for formatting numerical input with thousands separators.
 
 ## Installation
 
